@@ -1,0 +1,675 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,Tahoma,Geneva,Verdana,sans-serif;
+}
+
+body{
+
+    background:#0c1220;
+
+    color:white;
+
+    overflow:hidden;
+
+}
+
+.dashboard{
+
+    display:flex;
+
+    width:100vw;
+
+    height:100vh;
+
+}
+
+.sidebar{
+
+    width:220px;
+
+    background:#141b2d;
+
+    border-right:1px solid #2f3a52;
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.sidebar h2{
+
+    color:#69b3ff;
+
+    margin-bottom:25px;
+
+    font-size:30px;
+
+}
+
+.sidebar button{
+
+    border:none;
+
+    background:none;
+
+    color:white;
+
+    padding:12px;
+
+    text-align:left;
+
+    margin-bottom:6px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.sidebar button:hover{
+
+    background:#273554;
+
+}
+
+.menuActivo{
+
+    background:#2f6bff !important;
+
+}
+
+.contenido{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.topbar{
+
+    height:85px;
+
+    background:#161f35;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:20px 30px;
+
+    border-bottom:1px solid #32445e;
+
+}
+
+.topbar h1{
+
+    font-size:34px;
+
+}
+
+.estadoSistema{
+
+    color:#66ff77;
+
+    font-size:22px;
+
+    font-weight:bold;
+
+}
+.indicadores{
+
+    display:grid;
+
+    grid-template-columns:repeat(6,1fr);
+
+    gap:15px;
+
+    padding:18px;
+
+}
+
+.cardIndicador{
+
+    background:#1b2439;
+
+    border-radius:14px;
+
+    padding:18px;
+
+    text-align:center;
+
+    border-top:5px solid #5aa8ff;
+
+    transition:.25s;
+
+    cursor:pointer;
+
+}
+
+.cardIndicador:hover{
+
+    transform:translateY(-4px);
+
+    box-shadow:0 10px 20px rgba(0,0,0,.35);
+
+}
+
+.cardIndicador span{
+
+    color:#b9c7de;
+
+    font-size:14px;
+
+}
+
+.cardIndicador h2{
+
+    margin-top:12px;
+
+    font-size:34px;
+
+    color:white;
+
+}
+
+.centro{
+
+    flex:1;
+
+    display:grid;
+
+    grid-template-columns:60% 40%;
+
+    gap:18px;
+
+    padding:0 18px 18px 18px;
+
+}
+
+.panelTanques{
+
+    background:#1b2439;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    overflow:hidden;
+
+}
+
+.panelTanques h2{
+
+    margin-bottom:18px;
+
+    color:#72b4ff;
+
+}
+
+.gridTanques{
+
+    display:grid;
+
+    grid-template-columns:repeat(2,1fr);
+
+    gap:30px;
+
+    justify-items:center;
+
+    align-items:center;
+
+    height:100%;
+
+}
+.tanque{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    cursor:pointer;
+
+    transition:.30s;
+
+}
+
+.tanque:hover{
+
+    transform:scale(1.05);
+
+}
+
+.tanque.activo .circulo{
+
+    border:6px solid #4aa3ff;
+
+    box-shadow:0 0 25px #4aa3ff;
+
+}
+
+.circulo{
+
+    width:140px;
+
+    height:140px;
+
+    border-radius:50%;
+
+    background:linear-gradient(#2d80d6,#18466f);
+
+    border:5px solid #6fbfff;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:white;
+
+    font-size:26px;
+
+    font-weight:bold;
+
+}
+
+.ledVerde{
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#22ff55;
+
+    box-shadow:0 0 12px #22ff55;
+
+    margin-bottom:12px;
+
+}
+
+.ledRojo{
+
+    width:18px;
+
+    height:18px;
+
+    border-radius:50%;
+
+    background:#ff2a2a;
+
+    box-shadow:0 0 12px #ff2a2a;
+
+    margin-bottom:12px;
+
+}
+
+.panelGrafica{
+
+    background:#1b2439;
+
+    border-radius:15px;
+
+    padding:20px;
+
+}
+
+.panelGrafica h2{
+
+    color:#72b4ff;
+
+    margin-bottom:15px;
+
+}
+
+.grafica{
+
+    height:100%;
+
+    border:2px dashed #40557a;
+
+    border-radius:12px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    color:#8ea3c4;
+
+    font-size:24px;
+
+}
+.panelesInferiores{
+
+    display:grid;
+
+    grid-template-columns:repeat(3,1fr);
+
+    gap:18px;
+
+    padding:0 18px 18px 18px;
+
+    height:230px;
+
+}
+
+.panel{
+
+    background:#1b2439;
+
+    border-radius:15px;
+
+    padding:20px;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+.panel h3{
+
+    color:#73b6ff;
+
+    margin-bottom:18px;
+
+    font-size:22px;
+
+}
+
+.tablaEquipos{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+.tablaEquipos td{
+
+    padding:10px 6px;
+
+    border-bottom:1px solid #2d3852;
+
+    font-size:15px;
+
+}
+
+.tablaEquipos td:last-child{
+
+    text-align:right;
+
+    font-weight:bold;
+
+}
+
+.on{
+
+    color:#39ff6d;
+
+}
+
+.off{
+
+    color:#ffca3a;
+
+}
+
+.alarma{
+
+    padding:12px;
+
+    margin-bottom:10px;
+
+    background:#222d46;
+
+    border-left:4px solid #5ea8ff;
+
+    border-radius:6px;
+
+}
+
+.alarma.ok{
+
+    border-left:4px solid #39ff6d;
+
+}
+.footer{
+
+    height:55px;
+
+    background:#141b2d;
+
+    border-top:1px solid #32445e;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 25px;
+
+    color:#b9c7de;
+
+    font-size:14px;
+
+}
+
+.footer span{
+
+    margin-left:8px;
+
+    font-weight:bold;
+
+}
+
+.footer .on{
+
+    color:#39ff6d;
+
+}
+
+.footer .off{
+
+    color:#ff4d4d;
+
+}
+
+/* Scroll para futuros tanques */
+
+.gridTanques{
+
+    overflow-y:auto;
+
+    padding-right:8px;
+
+}
+
+.gridTanques::-webkit-scrollbar{
+
+    width:8px;
+
+}
+
+.gridTanques::-webkit-scrollbar-track{
+
+    background:#151c2f;
+
+    border-radius:10px;
+
+}
+
+.gridTanques::-webkit-scrollbar-thumb{
+
+    background:#4d7cff;
+
+    border-radius:10px;
+
+}
+
+.gridTanques::-webkit-scrollbar-thumb:hover{
+
+    background:#74a1ff;
+
+}
+/* ---------- Responsive ---------- */
+
+@media (max-width:1400px){
+
+    .indicadores{
+
+        grid-template-columns:repeat(3,1fr);
+
+    }
+
+    .centro{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .panelesInferiores{
+
+        grid-template-columns:1fr;
+
+        height:auto;
+
+    }
+
+}
+
+@media (max-width:900px){
+
+    .dashboard{
+
+        flex-direction:column;
+
+    }
+
+    .sidebar{
+
+        width:100%;
+
+        height:auto;
+
+        flex-direction:row;
+
+        flex-wrap:wrap;
+
+        justify-content:center;
+
+        gap:10px;
+
+    }
+
+    .sidebar h2{
+
+        width:100%;
+
+        text-align:center;
+
+        margin-bottom:10px;
+
+    }
+
+    .sidebar button{
+
+        margin:0;
+
+        min-width:140px;
+
+        text-align:center;
+
+    }
+
+    .topbar{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:10px;
+
+        height:auto;
+
+        padding:15px;
+
+    }
+
+    .topbar h1{
+
+        font-size:28px;
+
+    }
+
+    .indicadores{
+
+        grid-template-columns:repeat(2,1fr);
+
+    }
+
+    .gridTanques{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .circulo{
+
+        width:110px;
+
+        height:110px;
+
+        font-size:22px;
+
+    }
+
+}
+
+@media (max-width:600px){
+
+    .indicadores{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .panelesInferiores{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .footer{
+
+        flex-direction:column;
+
+        justify-content:center;
+
+        gap:6px;
+
+        height:auto;
+
+        padding:10px;
+
+    }
+
+}

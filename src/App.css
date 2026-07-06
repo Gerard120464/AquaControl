@@ -1,0 +1,249 @@
+/* ========================= */
+/* RESET */
+/* ========================= */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+
+    font-family:Arial,Helvetica,sans-serif;
+
+    background:#111827;
+
+    color:white;
+
+    overflow:hidden;
+
+}
+
+/* ========================= */
+
+.app{
+
+    display:flex;
+
+    height:100vh;
+
+}
+
+/* ========================= */
+
+.sidebar{
+
+    width:210px;
+
+    background:#1f2355;
+
+    padding:15px;
+
+}
+
+.sidebar h2{
+
+    color:#67a8ff;
+
+    text-align:center;
+
+    margin-bottom:25px;
+
+}
+
+.sidebar ul{
+
+    list-style:none;
+
+}
+
+.sidebar li{
+
+    padding:10px;
+
+    margin-bottom:8px;
+
+    border-radius:8px;
+
+    cursor:pointer;
+
+    transition:.3s;
+
+}
+
+.sidebar li:hover{
+
+    background:#3158c7;
+
+}
+
+/* ========================= */
+
+.contenido{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+/* ========================= */
+
+.topbar{
+
+    height:65px;
+
+    background:#23293c;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:0 25px;
+
+    border-bottom:1px solid #3d4760;
+
+}
+
+.estado{
+
+    color:#7cff8f;
+
+    font-weight:bold;
+
+}
+
+/* ========================= */
+
+.dashboard{
+
+    padding:15px;
+
+    display:grid;
+
+    grid-template-columns:repeat(7,1fr);
+
+    gap:12px;
+
+}
+
+/* ========================= */
+
+.card{
+
+    background:#252b3d;
+
+    border-radius:12px;
+
+    padding:10px;
+
+    text-align:center;
+
+    border-left:5px solid #5077ff;
+
+}
+
+/* ========================= */
+
+.icono{
+
+    font-size:34px;
+
+}
+
+.titulo{
+
+    margin-top:5px;
+
+    font-size:11px;
+
+    color:#a7b3cb;
+
+    font-weight:bold;
+
+}
+
+.valor{
+
+    font-size:28px;
+
+    margin-top:8px;
+
+    font-weight:bold;
+
+}
+
+.unidad{
+
+    color:#70a3ff;
+
+    margin-bottom:10px;
+
+}
+
+.barra{
+
+    width:100%;
+
+    height:8px;
+
+    background:#40475b;
+
+    border-radius:8px;
+
+    overflow:hidden;
+
+    margin-top:8px;
+
+}
+
+.progreso{
+
+    width:85%;
+
+    height:100%;
+
+    background:#61d44e;
+
+}
+
+.estado{
+
+    margin-top:8px;
+
+    font-size:12px;
+
+}
+
+/* ========================= */
+
+.tank-container{
+
+    margin:15px;
+
+    background:#20263b;
+
+    border-radius:15px;
+
+    padding:10px;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+.tank-container svg{
+
+    width:360px;
+
+    height:360px;
+
+}
