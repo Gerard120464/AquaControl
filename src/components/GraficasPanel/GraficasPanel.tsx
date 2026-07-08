@@ -1,5 +1,5 @@
 import type { Tanque } from "../../types/tanque";
-import { generarHistorico12h } from "../../utils/historicoSensores";
+import { generarHistorico24h } from "../../utils/historicoSensores";
 import HistoricoChart from "../HistoricoChart/HistoricoChart";
 import "./GraficasPanel.css";
 
@@ -8,7 +8,7 @@ type Props = {
 };
 
 export default function GraficasPanel({ tanque }: Props) {
-  const historicoOxigeno = generarHistorico12h(
+  const historicoOxigeno = generarHistorico24h(
     tanque.sensores.oxigeno,
     `${tanque.id}-oxigeno`,
     1.2,
@@ -16,7 +16,7 @@ export default function GraficasPanel({ tanque }: Props) {
     12
   );
 
-  const historicoTemperatura = generarHistorico12h(
+  const historicoTemperatura = generarHistorico24h(
     tanque.sensores.temperatura,
     `${tanque.id}-temperatura`,
     1.5,
@@ -27,7 +27,7 @@ export default function GraficasPanel({ tanque }: Props) {
   return (
     <div className="panel-graficas">
       <div className="panel-graficas__titulo">
-        <h2>Últimas 12 horas — {tanque.nombre}</h2>
+        <h2>Últimas 24 horas — {tanque.nombre}</h2>
       </div>
 
       <div className="panel-graficas__contenido">
@@ -38,6 +38,7 @@ export default function GraficasPanel({ tanque }: Props) {
           unidad="mg/L"
           color="#4fc3f7"
           datos={historicoOxigeno}
+          periodoHoras={24}
         />
 
         <HistoricoChart
@@ -47,6 +48,7 @@ export default function GraficasPanel({ tanque }: Props) {
           unidad="°C"
           color="#ff8a65"
           datos={historicoTemperatura}
+          periodoHoras={24}
         />
       </div>
     </div>

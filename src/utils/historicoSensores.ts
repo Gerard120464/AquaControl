@@ -13,26 +13,27 @@ function hashSemilla(texto: string): number {
 }
 
 /**
- * Genera 12 puntos horarios de prueba alrededor del valor actual.
+ * Genera puntos horarios de prueba alrededor del valor actual.
  * Al conectar Firebase, reemplazar por lecturas reales.
  */
-export function generarHistorico12h(
+export function generarHistorico24h(
   valorActual: number,
   semilla: string,
   variacion: number,
   minimo: number,
   maximo: number
 ): PuntoHistorico[] {
+  const horas = 24;
   const base = hashSemilla(semilla);
   const ahora = new Date();
 
-  return Array.from({ length: 12 }, (_, indice) => {
-    const horasAtras = 11 - indice;
+  return Array.from({ length: horas }, (_, indice) => {
+    const horasAtras = horas - 1 - indice;
     const fecha = new Date(ahora.getTime() - horasAtras * 60 * 60 * 1000);
     const onda =
-      Math.sin((indice + base % 7) * 0.9) * variacion * 0.45 +
-      Math.cos((indice + base % 5) * 0.5) * variacion * 0.25;
-    const tendencia = (indice - 5.5) * variacion * 0.04;
+      Math.sin((indice + (base % 7)) * 0.55) * variacion * 0.45 +
+      Math.cos((indice + (base % 5)) * 0.35) * variacion * 0.25;
+    const tendencia = (indice - (horas - 1) / 2) * variacion * 0.02;
     const valor = Math.min(
       maximo,
       Math.max(minimo, valorActual + onda + tendencia)

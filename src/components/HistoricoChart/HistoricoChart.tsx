@@ -8,11 +8,19 @@ type Props = {
   unidad: string;
   color: string;
   datos: PuntoHistorico[];
+  periodoHoras?: number;
 };
 
 const ANCHO = 320;
 const ALTO = 130;
 const MARGEN = { arriba: 12, derecha: 12, abajo: 26, izquierda: 36 };
+
+function indicesEtiquetasEjeX(total: number): number[] {
+  if (total <= 1) return [0];
+  if (total <= 12) return [0, 4, 8, total - 1];
+
+  return [0, 6, 12, 18, total - 1];
+}
 
 export default function HistoricoChart({
   chartId,
@@ -21,6 +29,7 @@ export default function HistoricoChart({
   unidad,
   color,
   datos,
+  periodoHoras = 24,
 }: Props) {
   const valores = datos.map((d) => d.valor);
   const minValor = Math.min(...valores);
@@ -46,7 +55,9 @@ export default function HistoricoChart({
 
   const areaBajo = `${linea} L ${puntos[puntos.length - 1].x} ${MARGEN.arriba + areaAlto} L ${puntos[0].x} ${MARGEN.arriba + areaAlto} Z`;
 
-  const etiquetasEjeX = [0, 4, 8, 11].map((indice) => puntos[indice]);
+  const etiquetasEjeX = indicesEtiquetasEjeX(datos.length).map(
+    (indice) => puntos[indice]
+  );
 
   return (
     <div className="historico-chart">
@@ -102,10 +113,11 @@ export default function HistoricoChart({
             key={`${punto.hora}-${indice}`}
             cx={punto.x}
             cy={punto.y}
-            r={indice === puntos.length - 1 ? 4 : 2.5}
+            r={indice === puntos.length - 1 ? 4 : 2}
             fill={indice === puntos.length - 1 ? color : "#1b2439"}
             stroke={color}
             strokeWidth={1.5}
+            opacity={indice === puntos.length - 1 ? 1 : 0.7}
           />
         ))}
 
@@ -122,7 +134,9 @@ export default function HistoricoChart({
         ))}
       </svg>
 
-      <span className="historico-chart__periodo">Últimas 12 horas</span>
+      <span className="historico-chart__periodo">
+        Últimas {periodoHoras} horas
+      </span>
     </div>
   );
 }
