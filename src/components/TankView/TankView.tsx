@@ -1,139 +1,131 @@
+import type { Tanque } from "../../types/tanque";
+import { calcularLayoutTanques } from "../../utils/tanqueLayout";
+
 type Props = {
-  tanqueActivo: number;
-  setTanqueActivo: (id: number) => void;
+  tanques: Tanque[];
+  tanqueActivoId: string | null;
+  onSeleccionarTanque: (id: string) => void;
 };
 
 function TankView({
-  tanqueActivo,
-  setTanqueActivo,
+  tanques,
+  tanqueActivoId,
+  onSeleccionarTanque,
 }: Props) {
+  const layout = calcularLayoutTanques(tanques.length);
+  const { radio, posiciones } = layout;
 
-  const tanques = [
-    { id: 1, x: 180, y: 120 },
-    { id: 2, x: 470, y: 120 },
-    { id: 3, x: 180, y: 320 },
-    { id: 4, x: 470, y: 320 },
-  ];
+  if (tanques.length === 0) {
+    return (
+      <div className="tank-container tank-vacio">
+        <p>No hay tanques configurados</p>
+      </div>
+    );
+  }
+
+  const escala = radio / 75;
 
   return (
-    <div
-      className="tank-container"
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <svg width="700" height="450" viewBox="0 0 700 450">
-
+    <div className="tank-container">
+      <svg
+        viewBox={`0 0 ${layout.ancho} ${layout.alto}`}
+        preserveAspectRatio="xMidYMid meet"
+        className="tank-svg"
+      >
         <text
-          x="350"
-          y="35"
+          x={layout.ancho / 2}
+          y="24"
           textAnchor="middle"
           fill="white"
-          fontSize="26"
+          fontSize="18"
           fontWeight="bold"
         >
-          ESTO ES UNA PRUEBA
-
+          Vista de granja — {tanques.length} tanque
+          {tanques.length !== 1 ? "s" : ""}
         </text>
 
-        {tanques.map((t) => (
+        {tanques.map((tanque, indice) => {
+          const { x, y } = posiciones[indice];
+          const activo = tanqueActivoId === tanque.id;
+          const ledColor =
+            tanque.estado === "alarma"
+              ? "#ff4040"
+              : activo
+                ? "#00ff66"
+                : "#4caf50";
 
-          <g
-            key={t.id}
-            onClick={() => {
-             alert("Tanque " + t.id);
-                console.log("Click tanque", t.id);
-                setTanqueActivo(t.id);
-             }}
-            style={{ cursor: "pointer" }}
-          >
+          const offsetLed = radio + 14 * escala;
+          const offsetLabel = radio + 28 * escala;
+          const radioAgua = radio * 0.8;
+          const radioDrenaje = radio * 0.13;
+          const pezRx = 10 * escala;
+          const pezRy = 4 * escala;
 
-            {/* LED */}
-
-            <circle
-              cx={t.x}
-              cy={t.y - 90}
-              r="8"
-              fill={tanqueActivo === t.id ? "#00ff66" : "#ff4040"}
-            />
-
-            {/* ESTANQUE */}
-
-            <circle
-              cx={t.x}
-              cy={t.y}
-              r="75"
-              fill={tanqueActivo === t.id ? "#2d8cff" : "#184d78"}
-              stroke="#a7d3ff"
-              strokeWidth="5"
-            />
-
-            {/* AGUA */}
-
-            <circle
-              cx={t.x}
-              cy={t.y}
-              r="60"
-              fill="transparent"
-            />
-
-            {/* DRENAJE */}
-
-            <circle
-              cx={t.x}
-              cy={t.y}
-              r="10"
-              fill="#d9d9d9"
-            />
-
-            {/* PECES */}
-
-            <ellipse
-              cx={t.x - 18}
-              cy={t.y - 10}
-              rx="10"
-              ry="4"
-              fill="white"
-            />
-
-            <polygon
-              points={`${t.x - 28},${t.y - 10} ${t.x - 38},${t.y - 15} ${t.x - 38},${t.y - 5}`}
-              fill="white"
-            />
-
-            <ellipse
-              cx={t.x + 18}
-              cy={t.y + 18}
-              rx="10"
-              ry="4"
-              fill="white"
-            />
-
-            <polygon
-              points={`${t.x + 8},${t.y + 18} ${t.x - 2},${t.y + 13} ${t.x - 2},${t.y + 23}`}
-              fill="white"
-            />
-
-            {/* NOMBRE */}
-
-            <text
-              x={t.x}
-              y={t.y + 105}
-              textAnchor="middle"
-              fill="white"
-              fontSize="20"
-              fontWeight="bold"
+          return (
+            <g
+              key={tanque.id}
+              onClick={() => onSeleccionarTanque(tanque.id)}
+              style={{ cursor: "pointer" }}
+              role="button"
+              aria-label={`Seleccionar ${tanque.nombre}`}
             >
-              {`T-${t.id.toString().padStart(2, "0")}`}
-            </text>
+              <circle
+                cx={x}
+                cy={y - offsetLed}
+                r={6 * escala}
+                fill={ledColor}
+              />
 
-          </g>
+              <circle
+                cx={x}
+                cy={y}
+                r={radio}
+                fill={activo ? "#2d8cff" : "#184d78"}
+                stroke={activo ? "#69b3ff" : "#a7d3ff"}
+                strokeWidth={activo ? 4 : 3}
+              />
 
-        ))}
+              <circle cx={x} cy={y} r={radioAgua} fill="transparent" />
 
+              <circle cx={x} cy={y} r={radioDrenaje} fill="#d9d9d9" />
+
+              <ellipse
+                cx={x - 18 * escala}
+                cy={y - 10 * escala}
+                rx={pezRx}
+                ry={pezRy}
+                fill="white"
+              />
+              <polygon
+                points={`${x - 28 * escala},${y - 10 * escala} ${x - 38 * escala},${y - 15 * escala} ${x - 38 * escala},${y - 5 * escala}`}
+                fill="white"
+              />
+
+              <ellipse
+                cx={x + 18 * escala}
+                cy={y + 18 * escala}
+                rx={pezRx}
+                ry={pezRy}
+                fill="white"
+              />
+              <polygon
+                points={`${x + 8 * escala},${y + 18 * escala} ${x - 2 * escala},${y + 13 * escala} ${x - 2 * escala},${y + 23 * escala}`}
+                fill="white"
+              />
+
+              <text
+                x={x}
+                y={y + offsetLabel}
+                textAnchor="middle"
+                fill="white"
+                fontSize={14 + escala * 6}
+                fontWeight="bold"
+              >
+                {tanque.nombre}
+              </text>
+            </g>
+          );
+        })}
       </svg>
     </div>
   );

@@ -15,13 +15,27 @@ body{
 
 }
 
+html,
+body,
+#root{
+
+    width:100%;
+
+    height:100%;
+
+    overflow:hidden;
+
+}
+
 .dashboard{
 
     display:flex;
 
-    width:100vw;
+    width:100%;
 
-    height:100vh;
+    height:100%;
+
+    overflow:hidden;
 
 }
 
@@ -93,11 +107,19 @@ body{
 
     flex-direction:column;
 
+    min-width:0;
+
+    min-height:0;
+
+    overflow:hidden;
+
 }
 
 .topbar{
 
-    height:85px;
+    flex-shrink:0;
+
+    min-height:70px;
 
     background:#161f35;
 
@@ -115,7 +137,7 @@ body{
 
 .topbar h1{
 
-    font-size:34px;
+    font-size:28px;
 
 }
 
@@ -130,13 +152,15 @@ body{
 }
 .indicadores{
 
+    flex-shrink:0;
+
     display:grid;
 
     grid-template-columns:repeat(6,1fr);
 
-    gap:15px;
+    gap:10px;
 
-    padding:18px;
+    padding:12px 18px;
 
 }
 
@@ -146,7 +170,7 @@ body{
 
     border-radius:14px;
 
-    padding:18px;
+    padding:12px 10px;
 
     text-align:center;
 
@@ -176,9 +200,9 @@ body{
 
 .cardIndicador h2{
 
-    margin-top:12px;
+    margin-top:8px;
 
-    font-size:34px;
+    font-size:26px;
 
     color:white;
 
@@ -188,13 +212,17 @@ body{
 
     flex:1;
 
+    min-height:0;
+
     display:grid;
 
-    grid-template-columns:60% 40%;
+    grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
 
-    gap:18px;
+    gap:14px;
 
-    padding:0 18px 18px 18px;
+    padding:0 14px 14px 14px;
+
+    overflow:hidden;
 
 }
 
@@ -204,9 +232,15 @@ body{
 
     border-radius:15px;
 
-    padding:20px;
+    padding:10px;
+
+    min-height:0;
 
     overflow:hidden;
+
+    display:flex;
+
+    flex-direction:column;
 
 }
 
@@ -325,7 +359,15 @@ body{
 
     border-radius:15px;
 
-    padding:20px;
+    padding:16px;
+
+    min-height:0;
+
+    display:flex;
+
+    flex-direction:column;
+
+    overflow:hidden;
 
 }
 
@@ -339,7 +381,9 @@ body{
 
 .grafica{
 
-    height:100%;
+    flex:1;
+
+    min-height:0;
 
     border:2px dashed #40557a;
 
@@ -347,26 +391,32 @@ body{
 
     display:flex;
 
+    flex-direction:column;
+
     justify-content:center;
 
     align-items:center;
 
     color:#8ea3c4;
 
-    font-size:24px;
+    font-size:18px;
 
 }
 .panelesInferiores{
+
+    flex-shrink:0;
 
     display:grid;
 
     grid-template-columns:repeat(3,1fr);
 
-    gap:18px;
+    gap:12px;
 
-    padding:0 18px 18px 18px;
+    padding:0 14px 10px 14px;
 
-    height:230px;
+    max-height:190px;
+
+    overflow:hidden;
 
 }
 
@@ -376,11 +426,15 @@ body{
 
     border-radius:15px;
 
-    padding:20px;
+    padding:14px;
 
     display:flex;
 
     flex-direction:column;
+
+    overflow-y:auto;
+
+    min-height:0;
 
 }
 
@@ -388,9 +442,9 @@ body{
 
     color:#73b6ff;
 
-    margin-bottom:18px;
+    margin-bottom:10px;
 
-    font-size:22px;
+    font-size:17px;
 
 }
 
@@ -451,9 +505,91 @@ body{
     border-left:4px solid #39ff6d;
 
 }
+
+.alarma.alerta{
+
+    background:#3d1f1f;
+
+    border-left:4px solid #ff4040;
+
+    color:#ffb3b3;
+
+}
+
+.badge-alarma{
+
+    color:#ff6b6b;
+
+    font-weight:bold;
+
+}
+
+.tank-vacio,
+.dashboard-vacio .mensaje-vacio,
+.dashboard-cargando{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+    flex:1;
+
+    color:#b9c7de;
+
+    text-align:center;
+
+}
+
+.grafica-valor{
+
+    font-size:42px;
+
+    font-weight:bold;
+
+    color:#69b3ff;
+
+    margin-bottom:8px;
+
+}
+.tank-container{
+
+    width:100%;
+
+    height:100%;
+
+    margin:0;
+
+    padding:0;
+
+    background:transparent;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+.tank-svg{
+
+    width:100%;
+
+    height:100%;
+
+    max-height:100%;
+
+    display:block;
+
+}
+
 .footer{
 
-    height:55px;
+    flex-shrink:0;
+
+    min-height:44px;
 
     background:#141b2d;
 
