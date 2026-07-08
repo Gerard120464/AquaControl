@@ -27,6 +27,21 @@
 @media (max-width: 1200px) {
   .panel-graficas__contenido {
     grid-template-columns: 1fr;
-    overflow-y: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .panel-graficas {
+    height: auto;
+    min-height: 360px;
+    overflow: visible;
+  }
+
+  .panel-graficas__contenido {
+    min-height: 320px;
+  }
+
+  .historico-chart {
+    min-height: 150px;
   }
 }

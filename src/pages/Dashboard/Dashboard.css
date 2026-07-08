@@ -668,144 +668,221 @@ body,
 }
 /* ---------- Responsive ---------- */
 
-@media (max-width:1400px){
-
-    .indicadores{
-
-        grid-template-columns:repeat(3,1fr);
-
-    }
-
-    .centro{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .panelesInferiores{
-
-        grid-template-columns:1fr;
-
-        height:auto;
-
-    }
-
+.menu-toggle,
+.menu-overlay {
+  display: none;
 }
 
-@media (max-width:900px){
+@media (max-width: 1400px) {
+  .indicadores {
+    grid-template-columns: repeat(3, 1fr);
+  }
 
-    .dashboard{
+  .centro {
+    grid-template-columns: 1fr;
+  }
 
-        flex-direction:column;
-
-    }
-
-    .sidebar{
-
-        width:100%;
-
-        height:auto;
-
-        flex-direction:row;
-
-        flex-wrap:wrap;
-
-        justify-content:center;
-
-        gap:10px;
-
-    }
-
-    .sidebar h2{
-
-        width:100%;
-
-        text-align:center;
-
-        margin-bottom:10px;
-
-    }
-
-    .sidebar button{
-
-        margin:0;
-
-        min-width:140px;
-
-        text-align:center;
-
-    }
-
-    .topbar{
-
-        flex-direction:column;
-
-        align-items:flex-start;
-
-        gap:10px;
-
-        height:auto;
-
-        padding:15px;
-
-    }
-
-    .topbar h1{
-
-        font-size:28px;
-
-    }
-
-    .indicadores{
-
-        grid-template-columns:repeat(2,1fr);
-
-    }
-
-    .gridTanques{
-
-        grid-template-columns:1fr;
-
-    }
-
-    .circulo{
-
-        width:110px;
-
-        height:110px;
-
-        font-size:22px;
-
-    }
-
+  .panelesInferiores {
+    grid-template-columns: 1fr;
+    max-height: none;
+  }
 }
 
-@media (max-width:600px){
+@media (max-width: 900px) {
+  html,
+  body,
+  #root {
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: auto;
+  }
 
-    .indicadores{
+  .dashboard {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
 
-        grid-template-columns:1fr;
+  .menu-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: fixed;
+    top: 12px;
+    left: 12px;
+    z-index: 1200;
+    width: 44px;
+    height: 44px;
+    border: none;
+    border-radius: 10px;
+    background: #2f6bff;
+    color: white;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  }
 
-    }
+  .menu-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1090;
+    border: none;
+    background: rgba(0, 0, 0, 0.55);
+    cursor: pointer;
+  }
 
-    .panelesInferiores{
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1100;
+    width: 260px;
+    max-width: 82vw;
+    height: 100vh;
+    padding: 70px 16px 20px;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 0;
+    transform: translateX(-105%);
+    transition: transform 0.25s ease;
+    overflow-y: auto;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.4);
+  }
 
-        grid-template-columns:1fr;
+  .sidebar--abierto {
+    transform: translateX(0);
+  }
 
-    }
+  .sidebar h2 {
+    width: 100%;
+    text-align: left;
+    margin-bottom: 16px;
+    font-size: 22px;
+  }
 
-    .footer{
+  .sidebar button {
+    width: 100%;
+    margin: 0 0 6px;
+    min-width: 0;
+    text-align: left;
+    padding: 12px;
+    font-size: 15px;
+  }
 
-        flex-direction:column;
+  .contenido {
+    overflow: visible;
+    min-height: auto;
+    width: 100%;
+  }
 
-        justify-content:center;
+  .topbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 62px 14px 14px;
+  }
 
-        gap:6px;
+  .topbar h1 {
+    font-size: 22px;
+  }
 
-        height:auto;
+  .estadoSistema {
+    font-size: 15px;
+  }
 
-        padding:10px;
+  .indicadores {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 10px 12px;
+  }
 
-    }
+  .cardIndicador {
+    padding: 10px 8px;
+  }
 
+  .cardIndicador span {
+    font-size: 12px;
+  }
+
+  .cardIndicador h2 {
+    font-size: 20px;
+    margin-top: 6px;
+  }
+
+  .centro {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 0 12px 12px;
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .panelTanques {
+    min-height: 300px;
+    height: auto;
+    overflow: visible;
+  }
+
+  .tank-container {
+    height: auto;
+    min-height: 280px;
+  }
+
+  .tank-svg {
+    min-height: 260px;
+    max-height: none;
+  }
+
+  .panelesInferiores {
+    grid-template-columns: 1fr;
+    max-height: none;
+    overflow: visible;
+    padding: 0 12px 12px;
+    gap: 10px;
+  }
+
+  .panel {
+    overflow: visible;
+    min-height: auto;
+  }
+
+  .panel h3 {
+    font-size: 15px;
+  }
+
+  .tablaEquipos td {
+    font-size: 14px;
+    padding: 8px 4px;
+  }
+
+  .footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 600px) {
+  .indicadores {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cardIndicador h2 {
+    font-size: 18px;
+  }
+
+  .topbar h1 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 400px) {
+  .indicadores {
+    grid-template-columns: 1fr;
+  }
 }

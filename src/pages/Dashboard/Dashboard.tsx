@@ -8,6 +8,7 @@ import { claseEquipo, etiquetaEquipo } from "../../utils/estadoEquipo";
 export default function Dashboard() {
   const { tanques, cargando } = useTanques();
   const [tanqueActivoId, setTanqueActivoId] = useState<string | null>(null);
+  const [menuAbierto, setMenuAbierto] = useState(false);
 
   useEffect(() => {
     if (tanques.length === 0) {
@@ -50,16 +51,36 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-      <aside className="sidebar">
+      <button
+        type="button"
+        className="menu-toggle"
+        aria-label="Abrir menú"
+        onClick={() => setMenuAbierto((abierto) => !abierto)}
+      >
+        ☰
+      </button>
+
+      {menuAbierto && (
+        <button
+          type="button"
+          className="menu-overlay"
+          aria-label="Cerrar menú"
+          onClick={() => setMenuAbierto(false)}
+        />
+      )}
+
+      <aside className={`sidebar ${menuAbierto ? "sidebar--abierto" : ""}`}>
         <h2>AquaControl</h2>
-        <button className="menuActivo">🏠 Dashboard</button>
-        <button>🐟 Producción</button>
-        <button>💧 Calidad del Agua</button>
-        <button>🫧 Nanoburbujas</button>
-        <button>🍽 Alimentación</button>
-        <button>⚙ Equipos</button>
-        <button>🚨 Alarmas</button>
-        <button>📈 Reportes</button>
+        <button className="menuActivo" onClick={() => setMenuAbierto(false)}>
+          🏠 Dashboard
+        </button>
+        <button onClick={() => setMenuAbierto(false)}>🐟 Producción</button>
+        <button onClick={() => setMenuAbierto(false)}>💧 Calidad del Agua</button>
+        <button onClick={() => setMenuAbierto(false)}>🫧 Nanoburbujas</button>
+        <button onClick={() => setMenuAbierto(false)}>🍽 Alimentación</button>
+        <button onClick={() => setMenuAbierto(false)}>⚙ Equipos</button>
+        <button onClick={() => setMenuAbierto(false)}>🚨 Alarmas</button>
+        <button onClick={() => setMenuAbierto(false)}>📈 Reportes</button>
       </aside>
 
       <main className="contenido">
@@ -67,7 +88,7 @@ export default function Dashboard() {
           <div>
             <h1>AquaControl</h1>
             <small>
-              Tanque seleccionado: <b>{tanque.nombre}</b>
+              Tanque: <b>{tanque.nombre}</b>
               {tanque.estado === "alarma" && (
                 <span className="badge-alarma"> — ALARMA</span>
               )}
