@@ -1,4 +1,4 @@
-import type { Sensores } from "../types/tanque";
+import type { Sensores } from "../../types/tanque";
 
 type Props = {
   sensores: Sensores;
