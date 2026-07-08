@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { Tanque } from "../../types/tanque";
 import { calcularLayoutTanques } from "../../utils/tanqueLayout";
 
@@ -12,7 +13,24 @@ function TankView({
   tanqueActivoId,
   onSeleccionarTanque,
 }: Props) {
-  const layout = calcularLayoutTanques(tanques.length);
+  const [compacto, setCompacto] = useState(
+    () => window.matchMedia("(max-width: 900px)").matches
+  );
+
+  useEffect(() => {
+    const media = window.matchMedia("(max-width: 900px)");
+    const actualizar = () => setCompacto(media.matches);
+    actualizar();
+    media.addEventListener("change", actualizar);
+    return () => media.removeEventListener("change", actualizar);
+  }, []);
+
+  const layout = calcularLayoutTanques(
+    tanques.length,
+    compacto ? 340 : 700,
+    compacto ? 175 : 400,
+    compacto
+  );
   const { radio, posiciones } = layout;
 
   if (tanques.length === 0) {
@@ -26,36 +44,53 @@ function TankView({
   const escala = radio / 75;
 
   return (
-    <div className="tank-container">
+    <div className={`tank-container ${compacto ? "tank-container--compacto" : ""}`}>
       <svg
         viewBox={`0 0 ${layout.ancho} ${layout.alto}`}
         preserveAspectRatio="xMidYMid meet"
         className="tank-svg"
       >
-        <text
-          x={layout.ancho / 2}
-          y="24"
-          textAnchor="middle"
-          fill="white"
-          fontSize="18"
-          fontWeight="bold"
-        >
-          Vista de granja — {tanques.length} tanque
-          {tanques.length !== 1 ? "s" : ""}
-        </text>
+        {!compacto && (
+          <text
+            x={layout.ancho / 2}
+            y="24"
+            textAnchor="middle"
+            fill="white"
+            fontSize="18"
+            fontWeight="bold"
+          >
+            Vista de granja — {tanques.length} tanques
+          </text>
+        )}
 
         {tanques.map((tanque, indice) => {
           const { x, y } = posiciones[indice];
-          const activo = tanqueActivoId === tanque.id;
-          const ledColor =
-            tanque.estado === "alarma"
+          const seleccionado = tanqueActivoId === tanque.id;
+          const enUso = tanque.enUso;
+
+          const ledColor = !enUso
+            ? "#5c6678"
+            : tanque.estado === "alarma"
               ? "#ff4040"
-              : activo
+              : seleccionado
                 ? "#00ff66"
                 : "#4caf50";
 
-          const offsetLed = radio + 14 * escala;
-          const offsetLabel = radio + 28 * escala;
+          const rellenoTanque = !enUso
+            ? "#2a3345"
+            : seleccionado
+              ? "#2d8cff"
+              : "#184d78";
+
+          const bordeTanque = !enUso
+            ? "#4a5568"
+            : seleccionado
+              ? "#69b3ff"
+              : "#7a9ec4";
+
+          const opacidad = enUso ? 1 : 0.55;
+          const offsetLed = radio + (compacto ? 10 : 14) * escala;
+          const offsetLabel = radio + (compacto ? 18 : 28) * escala;
           const radioAgua = radio * 0.8;
           const radioDrenaje = radio * 0.13;
           const pezRx = 10 * escala;
@@ -64,6 +99,7 @@ function TankView({
           return (
             <g
               key={tanque.id}
+              opacity={opacidad}
               onClick={() => onSeleccionarTanque(tanque.id)}
               style={{ cursor: "pointer" }}
               role="button"
@@ -72,7 +108,7 @@ function TankView({
               <circle
                 cx={x}
                 cy={y - offsetLed}
-                r={6 * escala}
+                r={(compacto ? 4 : 6) * escala}
                 fill={ledColor}
               />
 
@@ -80,45 +116,60 @@ function TankView({
                 cx={x}
                 cy={y}
                 r={radio}
-                fill={activo ? "#2d8cff" : "#184d78"}
-                stroke={activo ? "#69b3ff" : "#a7d3ff"}
-                strokeWidth={activo ? 4 : 3}
+                fill={rellenoTanque}
+                stroke={bordeTanque}
+                strokeWidth={seleccionado && enUso ? 3 : 2}
+                strokeDasharray={enUso ? undefined : "5 4"}
               />
 
-              <circle cx={x} cy={y} r={radioAgua} fill="transparent" />
+              {enUso && (
+                <>
+                  <circle cx={x} cy={y} r={radioAgua} fill="transparent" />
+                  <circle cx={x} cy={y} r={radioDrenaje} fill="#d9d9d9" />
+                  <ellipse
+                    cx={x - 18 * escala}
+                    cy={y - 10 * escala}
+                    rx={pezRx}
+                    ry={pezRy}
+                    fill="white"
+                  />
+                  <polygon
+                    points={`${x - 28 * escala},${y - 10 * escala} ${x - 38 * escala},${y - 15 * escala} ${x - 38 * escala},${y - 5 * escala}`}
+                    fill="white"
+                  />
+                  <ellipse
+                    cx={x + 18 * escala}
+                    cy={y + 18 * escala}
+                    rx={pezRx}
+                    ry={pezRy}
+                    fill="white"
+                  />
+                  <polygon
+                    points={`${x + 8 * escala},${y + 18 * escala} ${x - 2 * escala},${y + 13 * escala} ${x - 2 * escala},${y + 23 * escala}`}
+                    fill="white"
+                  />
+                </>
+              )}
 
-              <circle cx={x} cy={y} r={radioDrenaje} fill="#d9d9d9" />
-
-              <ellipse
-                cx={x - 18 * escala}
-                cy={y - 10 * escala}
-                rx={pezRx}
-                ry={pezRy}
-                fill="white"
-              />
-              <polygon
-                points={`${x - 28 * escala},${y - 10 * escala} ${x - 38 * escala},${y - 15 * escala} ${x - 38 * escala},${y - 5 * escala}`}
-                fill="white"
-              />
-
-              <ellipse
-                cx={x + 18 * escala}
-                cy={y + 18 * escala}
-                rx={pezRx}
-                ry={pezRy}
-                fill="white"
-              />
-              <polygon
-                points={`${x + 8 * escala},${y + 18 * escala} ${x - 2 * escala},${y + 13 * escala} ${x - 2 * escala},${y + 23 * escala}`}
-                fill="white"
-              />
+              {!enUso && (
+                <text
+                  x={x}
+                  y={y + 4}
+                  textAnchor="middle"
+                  fill="#8b95a8"
+                  fontSize={compacto ? 9 : 11}
+                  fontWeight="bold"
+                >
+                  OFF
+                </text>
+              )}
 
               <text
                 x={x}
                 y={y + offsetLabel}
                 textAnchor="middle"
-                fill="white"
-                fontSize={14 + escala * 6}
+                fill={enUso ? "white" : "#8b95a8"}
+                fontSize={compacto ? 10 : 14 + escala * 6}
                 fontWeight="bold"
               >
                 {tanque.nombre}

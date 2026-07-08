@@ -8,6 +8,7 @@ export const tanquesMock: Tanque[] = [
   {
     id: "tanque-01",
     nombre: "T-01",
+    enUso: true,
     estado: "normal",
     sensores: {
       temperatura: 13.2,
@@ -38,6 +39,7 @@ export const tanquesMock: Tanque[] = [
   {
     id: "tanque-02",
     nombre: "T-02",
+    enUso: true,
     estado: "normal",
     sensores: {
       temperatura: 12.4,
@@ -68,6 +70,7 @@ export const tanquesMock: Tanque[] = [
   {
     id: "tanque-03",
     nombre: "T-03",
+    enUso: true,
     estado: "alarma",
     sensores: {
       temperatura: 15.8,
@@ -98,6 +101,7 @@ export const tanquesMock: Tanque[] = [
   {
     id: "tanque-04",
     nombre: "T-04",
+    enUso: true,
     estado: "normal",
     sensores: {
       temperatura: 11.9,
@@ -128,6 +132,7 @@ export const tanquesMock: Tanque[] = [
   {
     id: "tanque-05",
     nombre: "T-05",
+    enUso: true,
     estado: "normal",
     sensores: {
       temperatura: 13.6,
@@ -153,6 +158,35 @@ export const tanquesMock: Tanque[] = [
       { mensaje: "Sin alarmas activas", tipo: "ok" },
       { mensaje: "Recirculador en espera", tipo: "info" },
       { mensaje: "Oxígeno estable", tipo: "info" },
+    ],
+  },
+  {
+    id: "tanque-06",
+    nombre: "T-06",
+    enUso: false,
+    estado: "normal",
+    sensores: {
+      temperatura: 0,
+      oxigeno: 0,
+      ph: 0,
+      tds: 0,
+      ec: 0,
+      nh4: 0,
+    },
+    equipos: {
+      recirculador: "apagado",
+      nanoburbujas: "apagado",
+      alimentador: "apagado",
+      iluminacion: "apagado",
+    },
+    produccion: {
+      biomasa: 0,
+      peces: 0,
+      pesoPromedio: 0,
+      conversion: 0,
+    },
+    alarmas: [
+      { mensaje: "Tanque fuera de operación", tipo: "info" },
     ],
   },
 ];

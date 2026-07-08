@@ -33,6 +33,7 @@ export interface AlarmaTanque {
 export interface Tanque {
   id: string;
   nombre: string;
+  enUso: boolean;
   estado: EstadoTanque;
   sensores: Sensores;
   equipos: EquiposTanque;

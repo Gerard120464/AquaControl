@@ -1,6 +1,7 @@
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import GraficasPanel from "../../components/GraficasPanel/GraficasPanel";
+import IndicadoresSensores from "../../components/IndicadoresSensores/IndicadoresSensores";
 import TankView from "../../components/TankView/TankView";
 import { useTanques } from "../../hooks/useTanques";
 import { claseEquipo, etiquetaEquipo } from "../../utils/estadoEquipo";
@@ -18,7 +19,8 @@ export default function Dashboard() {
 
     const sigueExistiendo = tanques.some((t) => t.id === tanqueActivoId);
     if (!tanqueActivoId || !sigueExistiendo) {
-      setTanqueActivoId(tanques[0].id);
+      const primeroActivo = tanques.find((t) => t.enUso) ?? tanques[0];
+      setTanqueActivoId(primeroActivo.id);
     }
   }, [tanques, tanqueActivoId]);
 
@@ -105,36 +107,15 @@ export default function Dashboard() {
               onSeleccionarTanque={setTanqueActivoId}
             />
           </div>
+
+          <IndicadoresSensores
+            sensores={tanque.sensores}
+            enUso={tanque.enUso}
+            compacto
+          />
         </div>
 
         <div className="bloqueScroll">
-          <section className="indicadores">
-            <div className="cardIndicador">
-              <span>🌡 Temperatura</span>
-              <h2>{tanque.sensores.temperatura} °C</h2>
-            </div>
-            <div className="cardIndicador">
-              <span>💨 Oxígeno</span>
-              <h2>{tanque.sensores.oxigeno} mg/L</h2>
-            </div>
-            <div className="cardIndicador">
-              <span>🧪 pH</span>
-              <h2>{tanque.sensores.ph}</h2>
-            </div>
-            <div className="cardIndicador">
-              <span>💧 TDS</span>
-              <h2>{tanque.sensores.tds}</h2>
-            </div>
-            <div className="cardIndicador">
-              <span>⚡ Conductividad</span>
-              <h2>{tanque.sensores.ec}</h2>
-            </div>
-            <div className="cardIndicador">
-              <span>🧪 NH₄</span>
-              <h2>{tanque.sensores.nh4}</h2>
-            </div>
-          </section>
-
           <GraficasPanel tanque={tanque} />
 
           <section className="panelesInferiores">

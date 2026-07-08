@@ -184,6 +184,42 @@ body,
 
 }
 
+.indicadores--compacto{
+
+    padding:6px 8px 8px;
+
+    gap:5px;
+
+}
+
+.indicadores--compacto .cardIndicador{
+
+    padding:5px 3px;
+
+    border-top-width:3px;
+
+    border-radius:8px;
+
+}
+
+.indicadores--compacto .cardIndicador span{
+
+    font-size:9px;
+
+    line-height:1.1;
+
+}
+
+.indicadores--compacto .cardIndicador h2{
+
+    margin-top:2px;
+
+    font-size:12px;
+
+    line-height:1.2;
+
+}
+
 .cardIndicador{
 
     background:#1b2439;
@@ -700,6 +736,28 @@ body,
     background:#74a1ff;
 
 }
+@media (min-width: 901px) {
+  .indicadores--compacto {
+    padding: 12px 18px;
+    gap: 10px;
+  }
+
+  .indicadores--compacto .cardIndicador {
+    padding: 12px 10px;
+    border-top-width: 5px;
+    border-radius: 14px;
+  }
+
+  .indicadores--compacto .cardIndicador span {
+    font-size: 14px;
+  }
+
+  .indicadores--compacto .cardIndicador h2 {
+    margin-top: 8px;
+    font-size: 26px;
+  }
+}
+
 /* ---------- Responsive ---------- */
 
 .menu-toggle,
@@ -852,31 +910,36 @@ body,
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    padding: 50px 14px 8px 62px;
+    padding: 46px 12px 6px 58px;
     min-height: auto;
   }
 
   .topbar h1 {
-    font-size: 18px;
+    font-size: 16px;
   }
 
   .topbar small {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .estadoSistema {
-    font-size: 13px;
+    font-size: 12px;
     white-space: nowrap;
   }
 
   .panelTanques {
     grid-area: unset;
-    min-height: 200px;
-    max-height: 34dvh;
-    height: 34dvh;
-    padding: 6px 8px 8px;
+    min-height: 0;
+    height: auto;
+    max-height: none;
+    padding: 4px 6px 2px;
     border-radius: 0;
     background: #141b2d;
+  }
+
+  .tank-container--compacto {
+    min-height: 150px;
+    height: 150px;
   }
 
   .tank-container {
@@ -891,22 +954,13 @@ body,
 
   .indicadores {
     grid-area: unset;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
-    padding: 10px 12px 0;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+    padding: 4px 8px 8px;
   }
 
-  .cardIndicador {
-    padding: 10px 8px;
-  }
-
-  .cardIndicador span {
-    font-size: 12px;
-  }
-
-  .cardIndicador h2 {
-    font-size: 20px;
-    margin-top: 6px;
+  .indicadores--compacto .cardIndicador h2 {
+    font-size: 11px;
   }
 
   .panel-graficas {
@@ -951,21 +1005,13 @@ body,
 }
 
 @media (max-width: 600px) {
-  .indicadores {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .cardIndicador h2 {
-    font-size: 18px;
-  }
-
-  .topbar h1 {
-    font-size: 20px;
+  .indicadores--compacto .cardIndicador h2 {
+    font-size: 10px;
   }
 }
 
 @media (max-width: 400px) {
   .indicadores {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
