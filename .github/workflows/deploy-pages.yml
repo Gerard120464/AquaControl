@@ -1,4 +1,4 @@
-name: Publicar en GitHub Pages
+name: Publicar sitio web
 
 on:
   push:
@@ -6,16 +6,12 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
-concurrency:
-  group: pages
-  cancel-in-progress: false
-
 jobs:
-  build:
+  publicar:
     runs-on: ubuntu-latest
     steps:
       - name: Obtener código
@@ -27,26 +23,16 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Instalar dependencias
-        run: npm ci
-
-      - name: Compilar para producción
-        run: npm run build
+      - name: Instalar y compilar
+        run: |
+          npm ci
+          npm run build
         env:
           VITE_BASE_PATH: /AquaControl/
 
-      - name: Subir artefacto
-        uses: actions/upload-pages-artifact@v3
+      - name: Publicar en rama gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Publicar sitio
-        id: deployment
-        uses: actions/deploy-pages@v4
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          publish_branch: gh-pages
