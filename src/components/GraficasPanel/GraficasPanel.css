@@ -32,16 +32,15 @@
 
 @media (max-width: 900px) {
   .panel-graficas {
+    grid-area: unset;
+    margin: 0 12px;
     height: auto;
-    min-height: 360px;
+    min-height: 300px;
     overflow: visible;
   }
 
   .panel-graficas__contenido {
-    min-height: 320px;
-  }
-
-  .historico-chart {
-    min-height: 150px;
+    grid-template-columns: 1fr;
+    min-height: 280px;
   }
 }

@@ -103,9 +103,18 @@ body,
 
     flex:1;
 
-    display:flex;
+    display:grid;
 
-    flex-direction:column;
+    grid-template-areas:
+        "topbar topbar"
+        "indicadores indicadores"
+        "tanques graficas"
+        "paneles paneles"
+        "footer footer";
+
+    grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+
+    grid-template-rows:auto auto 1fr auto auto;
 
     min-width:0;
 
@@ -115,7 +124,16 @@ body,
 
 }
 
+.bloqueFijo,
+.bloqueScroll{
+
+    display:contents;
+
+}
+
 .topbar{
+
+    grid-area:topbar;
 
     flex-shrink:0;
 
@@ -151,6 +169,8 @@ body,
 
 }
 .indicadores{
+
+    grid-area:indicadores;
 
     flex-shrink:0;
 
@@ -227,6 +247,8 @@ body,
 }
 
 .panelTanques{
+
+    grid-area:tanques;
 
     background:#1b2439;
 
@@ -402,9 +424,17 @@ body,
     font-size:18px;
 
 }
+.panel-graficas{
+
+    grid-area:graficas;
+
+}
+
 .panelesInferiores{
 
-    flex-shrink:0;
+    grid-area:paneles;
+
+    grid-column:1 / -1;
 
     display:grid;
 
@@ -587,6 +617,10 @@ body,
 
 .footer{
 
+    grid-area:footer;
+
+    grid-column:1 / -1;
+
     flex-shrink:0;
 
     min-height:44px;
@@ -674,12 +708,19 @@ body,
 }
 
 @media (max-width: 1400px) {
-  .indicadores {
-    grid-template-columns: repeat(3, 1fr);
+  .contenido {
+    grid-template-areas:
+      "topbar"
+      "indicadores"
+      "tanques"
+      "graficas"
+      "paneles"
+      "footer";
+    grid-template-columns: 1fr;
   }
 
-  .centro {
-    grid-template-columns: 1fr;
+  .indicadores {
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .panelesInferiores {
@@ -692,16 +733,44 @@ body,
   html,
   body,
   #root {
-    overflow-x: hidden;
-    overflow-y: auto;
-    height: auto;
+    overflow: hidden;
+    height: 100%;
+    height: 100dvh;
   }
 
   .dashboard {
+    flex-direction: row;
+    height: 100dvh;
+    overflow: hidden;
+  }
+
+  .contenido {
+    display: flex;
     flex-direction: column;
-    height: auto;
-    min-height: 100vh;
-    overflow: visible;
+    height: 100dvh;
+    overflow: hidden;
+    width: 100%;
+  }
+
+  .bloqueFijo {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    background: #0c1220;
+    border-bottom: 2px solid #2f6bff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+  }
+
+  .bloqueScroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    gap: 10px;
+    padding-bottom: 12px;
   }
 
   .menu-toggle {
@@ -773,30 +842,58 @@ body,
   }
 
   .contenido {
-    overflow: visible;
-    min-height: auto;
+    overflow: hidden;
+    min-height: 0;
     width: 100%;
   }
 
   .topbar {
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     gap: 8px;
-    padding: 62px 14px 14px;
+    padding: 50px 14px 8px 62px;
+    min-height: auto;
   }
 
   .topbar h1 {
-    font-size: 22px;
+    font-size: 18px;
+  }
+
+  .topbar small {
+    font-size: 12px;
   }
 
   .estadoSistema {
-    font-size: 15px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .panelTanques {
+    grid-area: unset;
+    min-height: 200px;
+    max-height: 34dvh;
+    height: 34dvh;
+    padding: 6px 8px 8px;
+    border-radius: 0;
+    background: #141b2d;
+  }
+
+  .tank-container {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .tank-svg {
+    min-height: 0;
+    max-height: 100%;
   }
 
   .indicadores {
+    grid-area: unset;
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
-    padding: 10px 12px;
+    padding: 10px 12px 0;
   }
 
   .cardIndicador {
@@ -812,35 +909,19 @@ body,
     margin-top: 6px;
   }
 
-  .centro {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    padding: 0 12px 12px;
-    overflow: visible;
-    min-height: auto;
-  }
-
-  .panelTanques {
+  .panel-graficas {
+    grid-area: unset;
+    margin: 0 12px;
+    height: auto;
     min-height: 300px;
-    height: auto;
-    overflow: visible;
-  }
-
-  .tank-container {
-    height: auto;
-    min-height: 280px;
-  }
-
-  .tank-svg {
-    min-height: 260px;
-    max-height: none;
   }
 
   .panelesInferiores {
+    grid-area: unset;
     grid-template-columns: 1fr;
     max-height: none;
     overflow: visible;
-    padding: 0 12px 12px;
+    padding: 0 12px;
     gap: 10px;
   }
 
@@ -859,11 +940,13 @@ body,
   }
 
   .footer {
+    grid-area: unset;
     flex-direction: column;
     align-items: flex-start;
     gap: 6px;
     padding: 12px 14px;
     font-size: 12px;
+    margin-top: 4px;
   }
 }
 

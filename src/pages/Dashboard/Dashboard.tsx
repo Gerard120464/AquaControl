@@ -84,47 +84,20 @@ export default function Dashboard() {
       </aside>
 
       <main className="contenido">
-        <header className="topbar">
-          <div>
-            <h1>AquaControl</h1>
-            <small>
-              Tanque: <b>{tanque.nombre}</b>
-              {tanque.estado === "alarma" && (
-                <span className="badge-alarma"> — ALARMA</span>
-              )}
-            </small>
-          </div>
-          <div className="estadoSistema">🟢 ONLINE</div>
-        </header>
+        <div className="bloqueFijo">
+          <header className="topbar">
+            <div>
+              <h1>AquaControl</h1>
+              <small>
+                Tanque: <b>{tanque.nombre}</b>
+                {tanque.estado === "alarma" && (
+                  <span className="badge-alarma"> — ALARMA</span>
+                )}
+              </small>
+            </div>
+            <div className="estadoSistema">🟢 ONLINE</div>
+          </header>
 
-        <section className="indicadores">
-          <div className="cardIndicador">
-            <span>🌡 Temperatura</span>
-            <h2>{tanque.sensores.temperatura} °C</h2>
-          </div>
-          <div className="cardIndicador">
-            <span>💨 Oxígeno</span>
-            <h2>{tanque.sensores.oxigeno} mg/L</h2>
-          </div>
-          <div className="cardIndicador">
-            <span>🧪 pH</span>
-            <h2>{tanque.sensores.ph}</h2>
-          </div>
-          <div className="cardIndicador">
-            <span>💧 TDS</span>
-            <h2>{tanque.sensores.tds}</h2>
-          </div>
-          <div className="cardIndicador">
-            <span>⚡ Conductividad</span>
-            <h2>{tanque.sensores.ec}</h2>
-          </div>
-          <div className="cardIndicador">
-            <span>🧪 NH₄</span>
-            <h2>{tanque.sensores.nh4}</h2>
-          </div>
-        </section>
-
-        <section className="centro">
           <div className="panelTanques">
             <TankView
               tanques={tanques}
@@ -132,11 +105,39 @@ export default function Dashboard() {
               onSeleccionarTanque={setTanqueActivoId}
             />
           </div>
+        </div>
+
+        <div className="bloqueScroll">
+          <section className="indicadores">
+            <div className="cardIndicador">
+              <span>🌡 Temperatura</span>
+              <h2>{tanque.sensores.temperatura} °C</h2>
+            </div>
+            <div className="cardIndicador">
+              <span>💨 Oxígeno</span>
+              <h2>{tanque.sensores.oxigeno} mg/L</h2>
+            </div>
+            <div className="cardIndicador">
+              <span>🧪 pH</span>
+              <h2>{tanque.sensores.ph}</h2>
+            </div>
+            <div className="cardIndicador">
+              <span>💧 TDS</span>
+              <h2>{tanque.sensores.tds}</h2>
+            </div>
+            <div className="cardIndicador">
+              <span>⚡ Conductividad</span>
+              <h2>{tanque.sensores.ec}</h2>
+            </div>
+            <div className="cardIndicador">
+              <span>🧪 NH₄</span>
+              <h2>{tanque.sensores.nh4}</h2>
+            </div>
+          </section>
 
           <GraficasPanel tanque={tanque} />
-        </section>
 
-        <section className="panelesInferiores">
+          <section className="panelesInferiores">
           <div className="panel">
             <h3>Equipos — {tanque.nombre}</h3>
             <table className="tablaEquipos">
@@ -222,6 +223,7 @@ export default function Dashboard() {
             Última actualización : {new Date().toLocaleTimeString()}
           </div>
         </footer>
+        </div>
       </main>
     </div>
   );
