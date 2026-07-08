@@ -7,8 +7,6 @@ on:
 
 permissions:
   contents: write
-  pages: write
-  id-token: write
 
 jobs:
   publicar:
@@ -23,12 +21,16 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: Instalar y compilar
-        run: |
-          npm ci
-          npm run build
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Compilar proyecto
+        run: npm run build
         env:
           VITE_BASE_PATH: /AquaControl/
+
+      - name: Crear archivo .nojekyll
+        run: touch dist/.nojekyll
 
       - name: Publicar en rama gh-pages
         uses: peaceiris/actions-gh-pages@v4
