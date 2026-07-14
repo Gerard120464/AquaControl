@@ -4,6 +4,10 @@ import { useSesion } from "../../hooks/useSesion";
 import { formatearMensajeBluetoothTarjeta } from "../../types/protocoloAquaControl";
 import "../Configuracion/Configuracion.css";
 
+const PORTAL_SSID = "AquaControl-Setup";
+const PORTAL_PASS = "aquacontrol";
+const PORTAL_URL = "http://192.168.4.1";
+
 export default function ConfigurarEsp32() {
   const { sesion } = useSesion();
   const {
@@ -54,33 +58,76 @@ export default function ConfigurarEsp32() {
         </Link>
         <h1>Tarjeta ESP32 — {sesion.usuario}</h1>
         <p className="config-pagina__subtitulo">
-          Una tarjeta por tanque. En campo con <b>iPhone</b> usa el portal WiFi de
-          la ESP32. Con PC también puedes usar Monitor Serie USB.
+          En <b>iPhone</b> no funciona Bluetooth desde Safari. Usa el portal WiFi
+          de la tarjeta (pasos abajo).
         </p>
       </header>
 
       <section className="config-pagina__paso config-pagina__aviso config-pagina__aviso--info">
-        <h2>📱 iPhone (sin PC) — recomendado en campo</h2>
-        <ol style={{ margin: 0, paddingLeft: 20, color: "#b9c7de", lineHeight: 1.6 }}>
+        <h2>📱 iPhone — portal WiFi (método correcto)</h2>
+        <ol style={{ margin: 0, paddingLeft: 20, color: "#b9c7de", lineHeight: 1.7 }}>
           <li>
-            Sube el firmware con portal (una vez, con PC o quien te ayude).
+            En la app: crea el tanque Nº <b>{numeroSeleccionado || "…"}</b> en{" "}
+            <Link to="/configuracion">Configuración</Link> (obligatorio antes).
           </li>
           <li>
-            Enciende la ESP32 sin configurar (o con{" "}
-            <code>BORRAR_EEPROM_AL_INICIAR 1</code> en secrets.h).
+            Sube el firmware actualizado al ESP32 (una vez, con PC).
+          </li>
+          <li>
+            Si la tarjeta ya tenía WiFi mal guardado: en{" "}
+            <code>secrets.h</code> pon <code>BORRAR_EEPROM_AL_INICIAR 1</code>,
+            sube firmware, luego vuelve a <code>0</code>.
+          </li>
+          <li>
+            Enciende la ESP32 y espera ~10 s.
           </li>
           <li>
             iPhone → <b>Ajustes → Wi‑Fi</b> → red{" "}
-            <code>AquaControl-Setup</code> (clave <code>aquacontrol</code>).
+            <code>{PORTAL_SSID}</code> (clave <code>{PORTAL_PASS}</code>).
           </li>
           <li>
-            Abre <b>Safari</b> → <code>http://192.168.4.1</code>
+            iOS puede mostrar <b>«Iniciar sesión en la red Wi‑Fi»</b> — ábrelo.
+            Si no aparece, abre Safari y escribe exactamente:{" "}
+            <code>{PORTAL_URL}</code> (sin https).
           </li>
           <li>
-            Completa RED, clave WiFi 2.4 GHz y tanque Nº {numeroSeleccionado || "…"}.
+            En el formulario: RED y clave de tu WiFi <b>2.4 GHz</b> (no 5 GHz) y
+            tanque Nº <b>{numeroSeleccionado || "…"}</b>.
           </li>
-          <li>Vuelve al WiFi normal del iPhone y abre el dashboard.</li>
+          <li>
+            Pulsa «Guardar y conectar», espera el mensaje de confirmación.
+          </li>
+          <li>
+            Vuelve al WiFi normal del iPhone y abre el dashboard.
+          </li>
         </ol>
+      </section>
+
+      <section className="config-pagina__paso config-pagina__aviso">
+        <h2>⚠️ Si no funciona en iPhone</h2>
+        <ul style={{ margin: 0, paddingLeft: 20, color: "#b9c7de", lineHeight: 1.6 }}>
+          <li>
+            «Sin internet» en <code>{PORTAL_SSID}</code> es normal — no cambies
+            de red hasta guardar.
+          </li>
+          <li>
+            Desactiva datos móviles un momento si Safari no abre el portal.
+          </li>
+          <li>
+            La red del campo debe ser <b>2.4 GHz</b> y la clave correcta.
+          </li>
+          <li>
+            El tanque debe existir en Firebase antes (app → Configuración).
+          </li>
+          <li>
+            Revisa en Firebase:{" "}
+            <code>
+              {sesion.usuario}/TANQUES/T-
+              {String(numeroSeleccionado).padStart(2, "0")}/conectado
+            </code>{" "}
+            debe pasar a <code>1</code>.
+          </li>
+        </ul>
       </section>
 
       <section className="config-pagina__paso">
@@ -118,14 +165,14 @@ export default function ConfigurarEsp32() {
       </section>
 
       <section className="config-pagina__paso">
-        <h2>2. RED y CLAVE (red WiFi)</h2>
+        <h2>2. RED y CLAVE (para copiar o portal)</h2>
         <div className="config-pagina__form">
           <label>
             RED
             <input
               value={red}
               onChange={(e) => setRed(e.target.value)}
-              placeholder="SSID de la red"
+              placeholder="SSID de la red 2.4 GHz"
             />
           </label>
           <label>
@@ -139,13 +186,14 @@ export default function ConfigurarEsp32() {
           </label>
         </div>
         <p>
-          Línea para la tarjeta: <code>{preview}</code>
+          Línea equivalente: <code>{preview}</code>
         </p>
 
         <div className="config-pagina__aviso config-pagina__aviso--info">
           <p>
-            <b>PC (Monitor Serie):</b> copia la línea y pégala en Arduino IDE
-            (115200, Both NL &amp; CR).
+            <b>PC (Monitor Serie USB):</b> copia la línea y pégala en Arduino IDE
+            (115200, Both NL &amp; CR). En iPhone no uses este método si no tienes
+            PC conectado.
           </p>
         </div>
 
@@ -170,7 +218,7 @@ export default function ConfigurarEsp32() {
               }
             }}
           >
-            Copiar línea (Monitor Serie USB)
+            Copiar línea (solo PC / USB)
           </button>
           <button
             type="button"

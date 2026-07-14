@@ -6,11 +6,19 @@ AquaControl ESP32 — instalación
    - BORRAR_EEPROM_AL_INICIAR: pon 1 antes de subir para pedir config de nuevo
 
    Configuracion iPhone (Safari, sin PC):
-   1. WiFi iPhone -> AquaControl-Setup / aquacontrol
-   2. Safari -> http://192.168.4.1
-   3. RED, clave WiFi 2.4 GHz, numero de tanque
+   1. Crea el tanque en la app (Configuracion) ANTES de configurar la tarjeta
+   2. WiFi iPhone -> AquaControl-Setup / aquacontrol
+   3. iOS debe mostrar "Iniciar sesion en la red Wi-Fi" (portal cautivo)
+      Si no aparece: Safari -> http://192.168.4.1 (sin https)
+   4. RED, clave WiFi 2.4 GHz, numero de tanque
+   5. Guardar y conectar -> vuelve al WiFi normal del iPhone
 
-   Tambien: Monitor Serie USB RED,CLAVE,numero
+   IMPORTANTE iPhone:
+   - Bluetooth ESP32_BT NO funciona desde Safari ni desde la app web
+   - Usa siempre el portal WiFi AquaControl-Setup
+   - "Sin internet" en AquaControl-Setup es normal
+
+   Tambien: Monitor Serie USB RED,CLAVE,numero (solo con PC)
 
 2. Arduino IDE → ESP32 board → instalar librería "Firebase ESP Client"
 
@@ -20,7 +28,7 @@ AquaControl ESP32 — instalación
 3. Flujo:
    a) Admin crea GERARD/clave en Firebase
    b) App: login + crear tanques (T-01, T-02…)
-   c) App: Configurar ESP32 → RED, CLAVE, número → Bluetooth
+   c) iPhone: portal WiFi AquaControl-Setup -> http://192.168.4.1
    d) Tarjeta recibe: MiRed,passWiFi,1
    e) Firmware verifica /GERARD/TANQUES/T-01 existe → escribe sensores
 
@@ -38,6 +46,5 @@ GERARD/TANQUES/T-01/
       2026070910: 8.5
 
 Clave = YYYYMMDDHH (año mes día hora). Una lectura por hora.
-Prueba manual en Firebase: añade hijo bajo historico/temperatura con clave hora actual.
 
 secrets.h no se sube al repo (añadir a .gitignore si usas git en firmware).

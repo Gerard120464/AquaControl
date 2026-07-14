@@ -46,10 +46,10 @@ export default function Dashboard() {
         <aside className="sidebar">
           <h2>AquaControl</h2>
           <button className="menuActivo">🏠 Dashboard</button>
-          <Link to="/configuracion" className="menuConfigurar">
+          <Link to="/configuracion" className="menuConfigurar menuConfigurar--destacado">
             ⚙ Configuración
           </Link>
-          <Link to="/configurar-esp32" className="menuConfigurar">
+          <Link to="/configurar-esp32" className="menuConfigurar menuConfigurar--destacado">
             📡 ESP32 / WiFi
           </Link>
         </aside>
@@ -97,6 +97,20 @@ export default function Dashboard() {
         <button className="menuActivo" onClick={() => setMenuAbierto(false)}>
           🏠 Dashboard
         </button>
+        <Link
+          to="/configuracion"
+          className="menuConfigurar menuConfigurar--destacado"
+          onClick={() => setMenuAbierto(false)}
+        >
+          ⚙ Configuración
+        </Link>
+        <Link
+          to="/configurar-esp32"
+          className="menuConfigurar menuConfigurar--destacado"
+          onClick={() => setMenuAbierto(false)}
+        >
+          📡 ESP32 / WiFi
+        </Link>
         <button onClick={() => setMenuAbierto(false)}>🐟 Producción</button>
         <button onClick={() => setMenuAbierto(false)}>💧 Calidad del Agua</button>
         <button onClick={() => setMenuAbierto(false)}>🫧 Nanoburbujas</button>
@@ -104,20 +118,6 @@ export default function Dashboard() {
         <button onClick={() => setMenuAbierto(false)}>⚙ Equipos</button>
         <button onClick={() => setMenuAbierto(false)}>🚨 Alarmas</button>
         <button onClick={() => setMenuAbierto(false)}>📈 Reportes</button>
-        <Link
-          to="/configuracion"
-          className="menuConfigurar"
-          onClick={() => setMenuAbierto(false)}
-        >
-          ⚙ Configuración
-        </Link>
-        <Link
-          to="/configurar-esp32"
-          className="menuConfigurar"
-          onClick={() => setMenuAbierto(false)}
-        >
-          📡 ESP32 / WiFi
-        </Link>
       </aside>
 
       <main className="contenido">
@@ -257,6 +257,7 @@ export default function Dashboard() {
           <div>
             Última actualización : {new Date().toLocaleTimeString()}
           </div>
+          <div className="footer-version">App v2 · Firebase</div>
         </footer>
         </div>
       </main>

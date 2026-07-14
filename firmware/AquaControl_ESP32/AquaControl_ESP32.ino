@@ -14,6 +14,7 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <WebServer.h>
+#include <DNSServer.h>
 #include <BluetoothSerial.h>
 #include <EEPROM.h>
 #include <Firebase_ESP_Client.h>
@@ -56,6 +57,7 @@ const int daylightOffset_sec = 0;
 // ==================== OBJETOS ====================
 BluetoothSerial SerialBT;
 WebServer portalWeb(80);
+DNSServer dnsPortal;
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
@@ -72,6 +74,7 @@ bool firebaseOk = false;
 bool sistemaListo = false;
 bool btConfigIniciado = false;
 bool portalActivo = false;
+bool conexionPendiente = false;
 unsigned long ultimoHeartbeat = 0;
 unsigned long ultimoSensor = 0;
 unsigned long ultimoAvisoConfig = 0;
@@ -116,6 +119,8 @@ void limpiarEEPROM() {
 
 void detenerPortalConfiguracion();
 void iniciarPortalConfiguracion();
+void registrarRutasPortal();
+void servicioPortalClientes();
 bool completarArranque();
 bool procesarLineaConfiguracion(const String &data);
 
@@ -169,38 +174,63 @@ void handlePortalGuardar() {
     return;
   }
 
-  detenerPortalConfiguracion();
   portalWeb.send(200, "text/html",
     "<html><body style='background:#0b1220;color:#e8eef8;font-family:system-ui;padding:24px'>"
     "<h1>Guardado</h1><p>Conectando a <b>" + redWifi + "</b> (tanque " + String(numeroTanque) + ").</p>"
-    "<p>Ya puedes volver al WiFi normal del iPhone.</p></body></html>");
+    "<p>Espera unos segundos y vuelve al WiFi normal del iPhone.</p>"
+    "<p>Si falla, reconecta a <b>" AP_SSID "</b> e intenta de nuevo.</p></body></html>");
+
+  conexionPendiente = true;
+}
+
+void registrarRutasPortal() {
+  portalWeb.on("/", HTTP_GET, handlePortalRoot);
+  portalWeb.on("/guardar", HTTP_POST, handlePortalGuardar);
+  // Detección de portal cautivo (iPhone / Android)
+  portalWeb.on("/hotspot-detect.html", HTTP_GET, handlePortalRoot);
+  portalWeb.on("/library/test/success.html", HTTP_GET, handlePortalRoot);
+  portalWeb.on("/generate_204", HTTP_GET, handlePortalRoot);
+  portalWeb.on("/connecttest.txt", HTTP_GET, handlePortalRoot);
+  portalWeb.on("/ncsi.txt", HTTP_GET, handlePortalRoot);
+  portalWeb.onNotFound([]() {
+    portalWeb.sendHeader("Location", PORTAL_URL);
+    portalWeb.send(302, "text/plain", "");
+  });
 }
 
 void iniciarPortalConfiguracion() {
   if (portalActivo) return;
 
   WiFi.mode(WIFI_AP_STA);
-  WiFi.softAP(AP_SSID, AP_PASS);
+  WiFi.softAPConfig(
+    IPAddress(192, 168, 4, 1),
+    IPAddress(192, 168, 4, 1),
+    IPAddress(255, 255, 255, 0));
+  WiFi.softAP(AP_SSID, AP_PASS, 1, 0, 4);
 
-  portalWeb.on("/", HTTP_GET, handlePortalRoot);
-  portalWeb.on("/guardar", HTTP_POST, handlePortalGuardar);
-  portalWeb.onNotFound([]() {
-    portalWeb.sendHeader("Location", "/");
-    portalWeb.send(302, "text/plain", "");
-  });
+  registrarRutasPortal();
   portalWeb.begin();
+
+  dnsPortal.start(53, "*", WiFi.softAPIP());
 
   portalActivo = true;
   Serial.println("=== Portal iPhone (Safari) ===");
   Serial.println("1. WiFi del iPhone -> " AP_SSID " / " AP_PASS);
-  Serial.println("2. Safari -> " PORTAL_URL);
+  Serial.println("2. Debe abrirse solo; si no, Safari -> " PORTAL_URL);
 }
 
 void detenerPortalConfiguracion() {
   if (!portalActivo) return;
+  dnsPortal.stop();
   portalWeb.stop();
   WiFi.softAPdisconnect(true);
   portalActivo = false;
+}
+
+void servicioPortalClientes() {
+  if (!portalActivo) return;
+  dnsPortal.processNextRequest();
+  portalWeb.handleClient();
 }
 
 void cargarDesdeEEPROM() {
@@ -290,13 +320,17 @@ void asegurarBluetoothConfig() {
 bool revisarEntradaConfiguracion() {
   if (Serial.available()) {
     String data = leerLineaConfig(Serial);
-    if (procesarLineaConfiguracion(data)) return true;
+    if (procesarLineaConfiguracion(data)) {
+      conexionPendiente = true;
+      return true;
+    }
   }
 
   if (SerialBT.available()) {
     String data = leerLineaConfig(SerialBT);
     if (procesarLineaConfiguracion(data)) {
       SerialBT.println("OK");
+      conexionPendiente = true;
       return true;
     }
   }
@@ -307,11 +341,23 @@ bool revisarEntradaConfiguracion() {
 void servicioModoConfiguracion() {
   iniciarPortalConfiguracion();
   asegurarBluetoothConfig();
-  portalWeb.handleClient();
+  servicioPortalClientes();
+
+  if (conexionPendiente) {
+    conexionPendiente = false;
+    detenerPortalConfiguracion();
+    if (!completarArranque()) {
+      Serial.println("Conexion fallida — portal activo de nuevo.");
+      iniciarPortalConfiguracion();
+      ultimoAvisoConfig = 0;
+    }
+    return;
+  }
 
   if (millis() - ultimoAvisoConfig > 15000) {
     ultimoAvisoConfig = millis();
-    Serial.println(">>> iPhone: WiFi " AP_SSID " -> Safari " PORTAL_URL);
+    Serial.println(">>> iPhone: WiFi " AP_SSID " (debe abrir portal solo)");
+    Serial.println(">>> Manual: Safari " PORTAL_URL);
     Serial.println(">>> PC: Monitor Serie RED,CLAVE,numero");
   }
 
@@ -617,9 +663,9 @@ void setup() {
 
 void loop() {
   if (!sistemaListo) {
-    if (tieneConfiguracionTanque()) {
-      completarArranque();
-    } else {
+    if (portalActivo || !tieneConfiguracionTanque()) {
+      servicioModoConfiguracion();
+    } else if (!completarArranque()) {
       servicioModoConfiguracion();
     }
     delay(50);

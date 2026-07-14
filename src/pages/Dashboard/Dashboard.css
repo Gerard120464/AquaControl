@@ -53,6 +53,10 @@ body,
 
     flex-direction:column;
 
+    overflow-y:auto;
+
+    min-height:0;
+
 }
 
 .sidebar h2{
@@ -123,6 +127,13 @@ body,
 
 .sidebar .menuConfigurar:hover{
     background:#273554;
+}
+
+.sidebar .menuConfigurar--destacado{
+    background:rgba(47,107,255,0.2);
+    border:1px solid #2f6bff;
+    color:#69b3ff !important;
+    margin-bottom:10px;
 }
 
 .estadoSistema.offline{
@@ -818,6 +829,11 @@ body,
 
     color:#ff4d4d;
 
+}
+
+.footer-version{
+    color:#69b3ff;
+    font-weight:600;
 }
 
 /* Scroll para futuros tanques */
