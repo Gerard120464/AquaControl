@@ -35,6 +35,8 @@ export interface Tanque {
   nombre: string;
   enUso: boolean;
   estado: EstadoTanque;
+  /** Tarjeta ESP32 reportando en Firebase */
+  conectado: boolean;
   sensores: Sensores;
   equipos: EquiposTanque;
   produccion: ProduccionTanque;

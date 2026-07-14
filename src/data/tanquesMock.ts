@@ -9,6 +9,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-01",
     nombre: "T-01",
     enUso: true,
+    conectado: true,
     estado: "normal",
     sensores: {
       temperatura: 13.2,
@@ -40,6 +41,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-02",
     nombre: "T-02",
     enUso: true,
+    conectado: true,
     estado: "normal",
     sensores: {
       temperatura: 12.4,
@@ -71,6 +73,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-03",
     nombre: "T-03",
     enUso: true,
+    conectado: true,
     estado: "alarma",
     sensores: {
       temperatura: 15.8,
@@ -102,6 +105,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-04",
     nombre: "T-04",
     enUso: true,
+    conectado: true,
     estado: "normal",
     sensores: {
       temperatura: 11.9,
@@ -133,6 +137,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-05",
     nombre: "T-05",
     enUso: true,
+    conectado: true,
     estado: "normal",
     sensores: {
       temperatura: 13.6,
@@ -164,6 +169,7 @@ export const tanquesMock: Tanque[] = [
     id: "tanque-06",
     nombre: "T-06",
     enUso: false,
+    conectado: false,
     estado: "normal",
     sensores: {
       temperatura: 0,

@@ -13,8 +13,7 @@ function hashSemilla(texto: string): number {
 }
 
 /**
- * Genera puntos horarios de prueba alrededor del valor actual.
- * Al conectar Firebase, reemplazar por lecturas reales.
+ * Genera puntos horarios de prueba alrededor del valor actual (solo modo mock).
  */
 export function generarHistorico24h(
   valorActual: number,
@@ -47,4 +46,20 @@ export function generarHistorico24h(
       valor: Math.round(valor * 100) / 100,
     };
   });
+}
+
+/** Hay lectura en vivo desde la tarjeta ESP32. */
+export function tanqueTieneLecturaEnVivo(tanque: {
+  conectado: boolean;
+  sensores: { oxigeno: number; temperatura: number };
+}): boolean {
+  if (!tanque.conectado) return false;
+  return tanque.sensores.oxigeno > 0 || tanque.sensores.temperatura > 0;
+}
+
+/** Hay puntos en historico/ (puede ser simulación sin tarjeta en línea). */
+export function tanqueTieneHistorico(
+  historico: { oxigeno: PuntoHistorico[]; temperatura: PuntoHistorico[] },
+): boolean {
+  return historico.oxigeno.length > 0 || historico.temperatura.length > 0;
 }

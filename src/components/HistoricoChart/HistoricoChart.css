@@ -47,7 +47,6 @@
 
 .historico-chart__linea {
   fill: none;
-  stroke-width: 2.5;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -60,6 +59,7 @@
 .historico-chart__eje-x {
   fill: #8ea3c4;
   font-size: 8px;
+  pointer-events: none;
 }
 
 .historico-chart__periodo {
@@ -68,4 +68,16 @@
   color: #6f82a8;
   text-align: center;
   flex-shrink: 0;
+}
+
+.historico-chart--vacio .historico-chart__vacio-texto {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  font-size: 12px;
+  color: #6f82a8;
+  text-align: center;
+  padding: 16px;
 }

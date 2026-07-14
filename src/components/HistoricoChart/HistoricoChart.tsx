@@ -14,12 +14,25 @@ type Props = {
 const ANCHO = 320;
 const ALTO = 130;
 const MARGEN = { arriba: 12, derecha: 12, abajo: 26, izquierda: 36 };
+const GROSOR_LINEA = 1;
 
 function indicesEtiquetasEjeX(total: number): number[] {
   if (total <= 1) return [0];
-  if (total <= 12) return [0, 4, 8, total - 1];
+  if (total <= 6) return [0, total - 1];
 
-  return [0, 6, 12, 18, total - 1];
+  const cantidad = Math.min(5, total);
+  const ultimo = total - 1;
+  const paso = ultimo / (cantidad - 1);
+
+  const indices = Array.from({ length: cantidad }, (_, i) =>
+    Math.min(ultimo, Math.round(i * paso)),
+  );
+
+  return [...new Set(indices)];
+}
+
+function etiquetaHoraCorta(hora: string): string {
+  return hora.replace(/\s*(a\.?\s*m\.?|p\.?\s*m\.?)\.?/gi, "").trim();
 }
 
 export default function HistoricoChart({
@@ -31,6 +44,20 @@ export default function HistoricoChart({
   datos,
   periodoHoras = 24,
 }: Props) {
+  if (datos.length === 0) {
+    return (
+      <div className="historico-chart historico-chart--vacio">
+        <div className="historico-chart__header">
+          <h3>{titulo}</h3>
+          <span className="historico-chart__valor" style={{ color }}>
+            {valorActual} {unidad}
+          </span>
+        </div>
+        <p className="historico-chart__vacio-texto">Sin puntos en las últimas 24 h</p>
+      </div>
+    );
+  }
+
   const valores = datos.map((d) => d.valor);
   const minValor = Math.min(...valores);
   const maxValor = Math.max(...valores);
@@ -39,9 +66,10 @@ export default function HistoricoChart({
   const areaAncho = ANCHO - MARGEN.izquierda - MARGEN.derecha;
   const areaAlto = ALTO - MARGEN.arriba - MARGEN.abajo;
 
+  const divisor = Math.max(datos.length - 1, 1);
+
   const puntos = datos.map((punto, indice) => {
-    const x =
-      MARGEN.izquierda + (indice / (datos.length - 1)) * areaAncho;
+    const x = MARGEN.izquierda + (indice / divisor) * areaAncho;
     const y =
       MARGEN.arriba +
       areaAlto -
@@ -58,6 +86,7 @@ export default function HistoricoChart({
   const etiquetasEjeX = indicesEtiquetasEjeX(datos.length).map(
     (indice) => puntos[indice]
   );
+  const muchosPuntos = puntos.length > 24;
 
   return (
     <div className="historico-chart">
@@ -106,32 +135,49 @@ export default function HistoricoChart({
         })}
 
         <path d={areaBajo} fill={`url(#grad-${chartId})`} />
-        <path d={linea} className="historico-chart__linea" stroke={color} />
+        <path
+          d={linea}
+          className="historico-chart__linea"
+          stroke={color}
+          strokeWidth={GROSOR_LINEA}
+          vectorEffect="non-scaling-stroke"
+        />
 
-        {puntos.map((punto, indice) => (
-          <circle
-            key={`${punto.hora}-${indice}`}
-            cx={punto.x}
-            cy={punto.y}
-            r={indice === puntos.length - 1 ? 4 : 2}
-            fill={indice === puntos.length - 1 ? color : "#1b2439"}
-            stroke={color}
-            strokeWidth={1.5}
-            opacity={indice === puntos.length - 1 ? 1 : 0.7}
-          />
-        ))}
+        {puntos.map((punto, indice) => {
+          const esUltimo = indice === puntos.length - 1;
+          if (muchosPuntos && !esUltimo) return null;
 
-        {etiquetasEjeX.map((punto, indice) => (
-          <text
-            key={`${punto.hora}-x-${indice}`}
-            x={punto.x}
-            y={ALTO - 6}
-            textAnchor="middle"
-            className="historico-chart__eje-x"
-          >
-            {punto.hora}
-          </text>
-        ))}
+          return (
+            <circle
+              key={`${punto.hora}-${indice}`}
+              cx={punto.x}
+              cy={punto.y}
+              r={esUltimo ? 3 : 1.5}
+              fill={esUltimo ? color : "#1b2439"}
+              stroke={color}
+              strokeWidth={esUltimo ? 1 : 0.75}
+              vectorEffect="non-scaling-stroke"
+              opacity={esUltimo ? 1 : 0.7}
+            />
+          );
+        })}
+
+        {etiquetasEjeX.map((punto, indice) => {
+          const esPrimera = indice === 0;
+          const esUltima = indice === etiquetasEjeX.length - 1;
+
+          return (
+            <text
+              key={`${punto.hora}-x-${indice}`}
+              x={punto.x}
+              y={ALTO - 6}
+              textAnchor={esPrimera ? "start" : esUltima ? "end" : "middle"}
+              className="historico-chart__eje-x"
+            >
+              {etiquetaHoraCorta(punto.hora)}
+            </text>
+          );
+        })}
       </svg>
 
       <span className="historico-chart__periodo">

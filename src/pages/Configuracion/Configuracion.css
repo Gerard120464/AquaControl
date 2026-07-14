@@ -1,0 +1,201 @@
+.config-pagina {
+  min-height: 100vh;
+  background: #0b1220;
+  color: #e8eef8;
+  padding: 24px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.config-pagina__header h1 {
+  margin: 12px 0 8px;
+  font-size: 1.5rem;
+}
+
+.config-pagina__volver,
+.config-pagina__link {
+  color: #69b3ff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.config-pagina__subtitulo {
+  color: #9eb0cc;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.config-pagina__paso {
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px solid #1e2d45;
+  border-radius: 12px;
+  background: #111a2b;
+}
+
+.config-pagina__paso h2 {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+}
+
+.config-pagina__paso p {
+  color: #b9c7de;
+  line-height: 1.45;
+  margin: 0 0 12px;
+}
+
+.config-pagina__form {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.config-pagina__form--fila {
+  align-items: end;
+}
+
+.config-pagina__form label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.9rem;
+  color: #9eb0cc;
+}
+
+.config-pagina__form input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a3f5f;
+  background: #0b1220;
+  color: #e8eef8;
+}
+
+.config-pagina__acciones,
+.config-pagina__form--fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.config-pagina__btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.config-pagina__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.config-pagina__btn.primario {
+  background: #2d7dff;
+  color: white;
+}
+
+.config-pagina__btn.secundario {
+  background: #1e2d45;
+  color: #e8eef8;
+}
+
+.config-pagina__lista-tanques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 12px;
+}
+
+.config-pagina__lista-tanques li {
+  background: #0b1220;
+  border: 1px solid #2a3f5f;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 600;
+}
+
+.config-pagina__tanque-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-width: 140px;
+}
+
+.config-pagina__btn-eliminar {
+  border: 1px solid #ff6b6b;
+  background: transparent;
+  color: #ff8a8a;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.config-pagina__btn-eliminar:hover:not(:disabled) {
+  background: #3d1f1f;
+}
+
+.config-pagina__btn-eliminar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.config-pagina__mensaje {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #1e2d45;
+  color: #b9c7de;
+  line-height: 1.45;
+}
+
+.config-pagina__mensaje--alerta {
+  background: #3d1f1f;
+  border: 1px solid #ff6b6b;
+  color: #ffb3b3;
+}
+
+.config-pagina__diagrama {
+  margin-top: 28px;
+  padding: 18px;
+  border: 1px dashed #2a3f5f;
+  border-radius: 12px;
+}
+
+.config-pagina__diagrama pre {
+  overflow-x: auto;
+  font-size: 0.78rem;
+  line-height: 1.4;
+  color: #9eb0cc;
+  margin: 0;
+}
+
+code {
+  background: #0b1220;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.config-pagina__aviso {
+  margin: 12px 0;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid #2a3f5f;
+}
+
+.config-pagina__aviso--info {
+  background: #152238;
+  border-color: #3d5a80;
+}
+
+.config-pagina__aviso p {
+  margin: 0 0 8px;
+}
+
+.config-pagina__aviso p:last-child {
+  margin-bottom: 0;
+}

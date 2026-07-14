@@ -1,13 +1,16 @@
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import GraficasPanel from "../../components/GraficasPanel/GraficasPanel";
 import IndicadoresSensores from "../../components/IndicadoresSensores/IndicadoresSensores";
 import TankView from "../../components/TankView/TankView";
+import { useEstadoEsp32 } from "../../hooks/useEstadoEsp32";
 import { useTanques } from "../../hooks/useTanques";
 import { claseEquipo, etiquetaEquipo } from "../../utils/estadoEquipo";
 
 export default function Dashboard() {
-  const { tanques, cargando } = useTanques();
+  const { tanques, cargando, sesion } = useTanques();
+  const { online: esp32Online, tanquesOnline } = useEstadoEsp32();
   const [tanqueActivoId, setTanqueActivoId] = useState<string | null>(null);
   const [menuAbierto, setMenuAbierto] = useState(false);
 
@@ -29,6 +32,9 @@ export default function Dashboard() {
   if (cargando) {
     return (
       <div className="dashboard dashboard-cargando">
+        <Link to="/configuracion" className="topbar-config">
+          ⚙ Configuración
+        </Link>
         <p>Cargando tanques...</p>
       </div>
     );
@@ -40,11 +46,26 @@ export default function Dashboard() {
         <aside className="sidebar">
           <h2>AquaControl</h2>
           <button className="menuActivo">🏠 Dashboard</button>
+          <Link to="/configuracion" className="menuConfigurar">
+            ⚙ Configuración
+          </Link>
+          <Link to="/configurar-esp32" className="menuConfigurar">
+            📡 ESP32 / WiFi
+          </Link>
         </aside>
         <main className="contenido">
+          <Link to="/configuracion" className="topbar-config topbar-config--flotante">
+            ⚙ Configuración
+          </Link>
           <div className="mensaje-vacio">
             <h1>Sin tanques</h1>
-            <p>Crea tanques en Firebase para verlos aquí.</p>
+            <p>
+              Inicia sesión y crea los tanques en Configuración (la app los
+              registra en Firebase).
+            </p>
+            <Link to="/configuracion" className="link-configurar">
+              Ir a Configuración inicial
+            </Link>
           </div>
         </main>
       </div>
@@ -83,21 +104,42 @@ export default function Dashboard() {
         <button onClick={() => setMenuAbierto(false)}>⚙ Equipos</button>
         <button onClick={() => setMenuAbierto(false)}>🚨 Alarmas</button>
         <button onClick={() => setMenuAbierto(false)}>📈 Reportes</button>
+        <Link
+          to="/configuracion"
+          className="menuConfigurar"
+          onClick={() => setMenuAbierto(false)}
+        >
+          ⚙ Configuración
+        </Link>
+        <Link
+          to="/configurar-esp32"
+          className="menuConfigurar"
+          onClick={() => setMenuAbierto(false)}
+        >
+          📡 ESP32 / WiFi
+        </Link>
       </aside>
 
       <main className="contenido">
         <div className="bloqueFijo">
           <header className="topbar">
-            <div>
+            <div className="topbar-titulo">
               <h1>AquaControl</h1>
-              <small>
-                Tanque: <b>{tanque.nombre}</b>
+              <span className="topbar-tanque">
+                {tanque.nombre}
                 {tanque.estado === "alarma" && (
-                  <span className="badge-alarma"> — ALARMA</span>
+                  <span className="badge-alarma"> ALARMA</span>
                 )}
-              </small>
+              </span>
             </div>
-            <div className="estadoSistema">🟢 ONLINE</div>
+            <div className="topbar-acciones">
+              <Link to="/configuracion" className="topbar-config">
+                ⚙ Config
+              </Link>
+              <div className={`estadoSistema ${esp32Online ? "online" : "offline"}`}>
+                {esp32Online ? "🟢 ONLINE" : "🔴 OFFLINE"}
+              </div>
+            </div>
           </header>
 
           <div className="panelTanques">
@@ -116,7 +158,10 @@ export default function Dashboard() {
         </div>
 
         <div className="bloqueScroll">
-          <GraficasPanel tanque={tanque} />
+          <GraficasPanel
+            tanque={tanque}
+            usuario={sesion?.usuario ?? null}
+          />
 
           <section className="panelesInferiores">
           <div className="panel">
@@ -192,13 +237,22 @@ export default function Dashboard() {
 
         <footer className="footer">
           <div>
-            Firebase : <span className="off">PENDIENTE</span>
+            Firebase :{" "}
+            <span className={sesion ? "on" : "off"}>
+              {sesion ? `/${sesion.usuario}/` : "Sin sesión"}
+            </span>
           </div>
           <div>
-            ESP32 : <span className="off">PENDIENTE</span>
+            ESP32 :{" "}
+            <span className={esp32Online ? "on" : "off"}>
+              {esp32Online
+                ? `${tanquesOnline} tarjeta(s) en línea`
+                : "SIN SEÑAL"}
+            </span>
           </div>
           <div>
-            Tanques activos : <b>{tanques.length}</b>
+            Tanques activos : <b>{tanques.filter((t) => t.enUso).length}</b> /{" "}
+            {tanques.length}
           </div>
           <div>
             Última actualización : {new Date().toLocaleTimeString()}

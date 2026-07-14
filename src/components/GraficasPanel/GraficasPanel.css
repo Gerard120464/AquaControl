@@ -16,6 +16,13 @@
   font-size: 16px;
 }
 
+.panel-graficas__aviso-prueba {
+  display: block;
+  margin: -4px 0 8px;
+  font-size: 11px;
+  color: #f0a050;
+}
+
 .panel-graficas__contenido {
   flex: 1;
   min-height: 0;
@@ -43,4 +50,30 @@
     grid-template-columns: 1fr;
     min-height: 280px;
   }
+}
+
+.panel-graficas__sin-datos {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 32px 20px;
+  border: 1px dashed #2d3a55;
+  border-radius: 12px;
+  background: #151d31;
+  color: #b9c7de;
+  min-height: 160px;
+}
+
+.panel-graficas__sin-datos p {
+  margin: 0 0 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.panel-graficas__sin-datos small {
+  color: #6f82a8;
+  line-height: 1.4;
 }
