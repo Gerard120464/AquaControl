@@ -257,7 +257,7 @@ export default function Dashboard() {
           <div>
             Última actualización : {new Date().toLocaleTimeString()}
           </div>
-          <div className="footer-version">App v2 · Firebase</div>
+          <div className="footer-version">App v2.1 · Firebase · 16-jul-2026</div>
         </footer>
         </div>
       </main>
