@@ -3,6 +3,7 @@ import { useHistoricoSensor } from "../../hooks/useHistoricoSensor";
 import {
   tanqueTieneHistorico,
   tanqueTieneLecturaEnVivo,
+  tanqueTieneSensoresReportados,
 } from "../../utils/historicoSensores";
 import HistoricoChart from "../HistoricoChart/HistoricoChart";
 import "./GraficasPanel.css";
@@ -28,6 +29,7 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
   );
 
   const lecturaEnVivo = tanqueTieneLecturaEnVivo(tanque);
+  const sensoresReportados = tanqueTieneSensoresReportados(tanque);
   const tieneHistorico = tanqueTieneHistorico({
     oxigeno: historicoOxigeno,
     temperatura: historicoTemperatura,
@@ -45,21 +47,26 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
   return (
     <div className="panel-graficas">
       <div className="panel-graficas__titulo">
-        <h2>Últimas 24 horas — {tanque.nombre}</h2>
-        {tieneHistorico && !tanque.conectado && (
+        <h2>📈 Tendencia — {tanque.nombre}</h2>
+        <p className="panel-graficas__subtitulo">
+          Temperatura y oxígeno (lectura cada 10 min)
+        </p>
+        {tieneHistorico && !lecturaEnVivo && (
           <small className="panel-graficas__aviso-prueba">
-            Histórico de prueba — tarjeta sin señal
+            Histórico guardado — tarjeta sin señal reciente
           </small>
         )}
       </div>
 
-      {!tieneHistorico && !lecturaEnVivo ? (
+      {!tieneHistorico && !sensoresReportados ? (
         <div className="panel-graficas__sin-datos">
           <p>Sin datos de sensores para este tanque.</p>
           <small>
-            {tanque.conectado
-              ? "Espere las primeras lecturas de la tarjeta ESP32."
-              : "Vincule la tarjeta ESP32 en Configuración → ESP32 / WiFi."}
+            Ruta en Firebase:{" "}
+            <code>
+              {usuario ?? "?"}/TANQUES/{tanque.id}/historico/
+            </code>
+            . Vincule la tarjeta en Configuración → ESP32 / WiFi.
           </small>
         </div>
       ) : !tieneHistorico ? (
@@ -71,7 +78,8 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
           <small>
             El histórico se guarda en Firebase bajo{" "}
             <code>historico/temperatura</code> y <code>historico/oxigeno</code>{" "}
-            (clave cada 10 min). La gráfica aparece al acumular puntos.
+            (clave cada 10 min, últimos 7 días). Con pocos puntos la línea
+            aparece al acumular lecturas.
           </small>
         </div>
       ) : (
@@ -84,7 +92,7 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
               unidad="mg/L"
               color="#4fc3f7"
               datos={historicoOxigeno}
-              periodoHoras={24}
+              periodoHoras={168}
             />
           )}
 
@@ -96,7 +104,7 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
               unidad="°C"
               color="#ff8a65"
               datos={historicoTemperatura}
-              periodoHoras={24}
+              periodoHoras={168}
             />
           )}
         </div>

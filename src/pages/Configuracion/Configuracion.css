@@ -199,3 +199,38 @@ code {
 .config-pagina__aviso p:last-child {
   margin-bottom: 0;
 }
+
+.config-pagina__paso--bloqueado {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.config-pagina__paso--activo {
+  border-color: #2f6bff;
+  box-shadow: 0 0 0 1px rgba(47, 107, 255, 0.35);
+}
+
+.config-pagina__diagnostico {
+  border-width: 2px;
+}
+
+.config-pagina__diagnostico--ok {
+  border-color: #39ff6d;
+  background: #0f1f18;
+}
+
+.config-pagina__diagnostico--alerta {
+  border-color: #ff6b6b;
+  background: #2a1518;
+}
+
+.config-pagina__diagnostico--info {
+  border-color: #69b3ff;
+}
+
+.config-pagina__diagnostico-msg {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  color: #e8eef8;
+  margin: 8px 0;
+}

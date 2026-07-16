@@ -48,13 +48,20 @@ export function generarHistorico24h(
   });
 }
 
-/** Hay lectura en vivo desde la tarjeta ESP32. */
+/** Hay valores de sensores guardados en Firebase (aunque la tarjeta figure offline). */
+export function tanqueTieneSensoresReportados(tanque: {
+  sensores: { oxigeno: number; temperatura: number };
+}): boolean {
+  return tanque.sensores.oxigeno > 0 || tanque.sensores.temperatura > 0;
+}
+
+/** Hay lectura en vivo: online y con valores de sensor. */
 export function tanqueTieneLecturaEnVivo(tanque: {
   conectado: boolean;
   sensores: { oxigeno: number; temperatura: number };
 }): boolean {
   if (!tanque.conectado) return false;
-  return tanque.sensores.oxigeno > 0 || tanque.sensores.temperatura > 0;
+  return tanqueTieneSensoresReportados(tanque);
 }
 
 /** Hay puntos en historico/ (puede ser simulación sin tarjeta en línea). */

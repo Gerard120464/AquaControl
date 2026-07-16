@@ -53,7 +53,7 @@ export default function HistoricoChart({
             {valorActual} {unidad}
           </span>
         </div>
-        <p className="historico-chart__vacio-texto">Sin puntos en las últimas 24 h</p>
+        <p className="historico-chart__vacio-texto">Sin puntos en el período</p>
       </div>
     );
   }

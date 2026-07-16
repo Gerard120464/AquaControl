@@ -1,51 +1,52 @@
 import { onValue, ref, type Unsubscribe } from "firebase/database";
-import { obtenerDatabase } from "../config/firebase";
+import { FIREBASE_DATABASE_URL, obtenerDatabase } from "../config/firebase";
 import type { PuntoHistorico } from "../utils/historicoSensores";
 
 export type SensorHistorico = "temperatura" | "oxigeno";
 
-/**
- * Histórico en Firebase (escrito por ESP32 cada lectura):
- *
- * /{USUARIO}/TANQUES/T-01/
- *   temperatura: 13.2          ← valor actual
- *   historico/
- *     temperatura/
- *       202607091030: 13.1      ← clave = YYYYMMDDHHmm (cada 10 min, hora local)
- *       202607091040: 13.4
- *     oxigeno/
- *       202607091030: 8.5
- *
- * También se aceptan claves horarias legadas YYYYMMDDHH (10 dígitos).
- */
+const VENTANA_HISTORICO_MS = 7 * 24 * 60 * 60 * 1000;
+const MAX_PUNTOS_GRAFICA = 288;
+
+function normalizarValorHistorico(valor: unknown): number | null {
+  const numero = typeof valor === "number" ? valor : Number(valor);
+  return Number.isFinite(numero) ? numero : null;
+}
 
 function parsearClaveHora(clave: string): Date | null {
-  if (!/^\d{10}(\d{2})?$/.test(clave)) return null;
-  const anio = Number(clave.slice(0, 4));
-  const mes = Number(clave.slice(4, 6)) - 1;
-  const dia = Number(clave.slice(6, 8));
-  const hora = Number(clave.slice(8, 10));
-  const minuto = clave.length === 12 ? Number(clave.slice(10, 12)) : 0;
+  const limpia = String(clave).trim();
+  if (!/^\d{10}(\d{2})?$/.test(limpia)) return null;
+
+  const anio = Number(limpia.slice(0, 4));
+  const mes = Number(limpia.slice(4, 6)) - 1;
+  const dia = Number(limpia.slice(6, 8));
+  const hora = Number(limpia.slice(8, 10));
+  const minuto = limpia.length === 12 ? Number(limpia.slice(10, 12)) : 0;
+
+  if (anio < 2020 || anio > 2100 || mes < 0 || mes > 11 || dia < 1 || dia > 31) {
+    return null;
+  }
+
   const fecha = new Date(anio, mes, dia, hora, minuto);
   return Number.isNaN(fecha.getTime()) ? null : fecha;
 }
 
-function convertirNodosAPuntos(
-  nodos: Record<string, number> | undefined,
+export function convertirNodosAPuntos(
+  nodos: Record<string, unknown> | null | undefined,
 ): PuntoHistorico[] {
-  if (!nodos) return [];
+  if (!nodos || typeof nodos !== "object" || Array.isArray(nodos)) return [];
 
-  const hace24h = Date.now() - 24 * 60 * 60 * 1000;
+  const desde = Date.now() - VENTANA_HISTORICO_MS;
 
-  return Object.entries(nodos)
+  const todos = Object.entries(nodos)
     .map(([clave, valor]) => {
       const fecha = parsearClaveHora(clave);
-      if (!fecha || fecha.getTime() < hace24h) return null;
-      const numero = Number(valor);
-      if (!Number.isFinite(numero)) return null;
+      const numero = normalizarValorHistorico(valor);
+      if (!fecha || numero === null) return null;
       return {
         fecha: fecha.getTime(),
         hora: fecha.toLocaleTimeString("es-CO", {
+          day: "2-digit",
+          month: "2-digit",
           hour: "2-digit",
           minute: "2-digit",
         }),
@@ -53,8 +54,46 @@ function convertirNodosAPuntos(
       };
     })
     .filter((p) => p !== null)
-    .sort((a, b) => a.fecha - b.fecha)
-    .map(({ hora, valor }) => ({ hora, valor }));
+    .sort((a, b) => a.fecha - b.fecha);
+
+  let puntos = todos.filter((p) => p.fecha >= desde);
+
+  if (puntos.length === 0 && todos.length > 0) {
+    puntos = todos.slice(-MAX_PUNTOS_GRAFICA);
+  } else if (puntos.length > MAX_PUNTOS_GRAFICA) {
+    puntos = puntos.slice(-MAX_PUNTOS_GRAFICA);
+  }
+
+  return puntos.map(({ hora, valor }) => ({ hora, valor }));
+}
+
+function rutaHistoricoSensor(
+  usuario: string,
+  tanqueId: string,
+  sensor: SensorHistorico,
+): string {
+  const u = usuario.trim().toUpperCase();
+  const id = tanqueId.trim();
+  return `${u}/TANQUES/${id}/historico/${sensor}`;
+}
+
+/** Lectura directa HTTP (reglas abiertas). Respaldo si el SDK no entrega datos. */
+export async function cargarHistoricoSensorHttp(
+  usuario: string,
+  tanqueId: string,
+  sensor: SensorHistorico,
+): Promise<PuntoHistorico[]> {
+  const ruta = rutaHistoricoSensor(usuario, tanqueId, sensor);
+  const url = `${FIREBASE_DATABASE_URL}/${ruta}.json`;
+
+  try {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) return [];
+    const nodos = (await res.json()) as Record<string, unknown> | null;
+    return convertirNodosAPuntos(nodos ?? undefined);
+  } catch {
+    return [];
+  }
 }
 
 export function suscribirHistoricoSensor(
@@ -66,11 +105,17 @@ export function suscribirHistoricoSensor(
   const db = obtenerDatabase();
   if (!db) return null;
 
-  const ruta = ref(db, `${usuario}/TANQUES/${tanqueId}/historico/${sensor}`);
-  return onValue(ruta, (snapshot) => {
-    const nodos = snapshot.val() as Record<string, number> | null;
-    onDatos(convertirNodosAPuntos(nodos ?? undefined));
-  });
+  const ruta = ref(db, rutaHistoricoSensor(usuario, tanqueId, sensor));
+  return onValue(
+    ruta,
+    (snapshot) => {
+      const nodos = snapshot.val() as Record<string, unknown> | null;
+      onDatos(convertirNodosAPuntos(nodos ?? undefined));
+    },
+    () => {
+      void cargarHistoricoSensorHttp(usuario, tanqueId, sensor).then(onDatos);
+    },
+  );
 }
 
 /** Clave del intervalo de 10 min actual (redondeado hacia abajo). */

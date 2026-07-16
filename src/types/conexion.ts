@@ -6,6 +6,7 @@ export interface CredencialesApp {
 
 export type EstadoConexion =
   | "inicial"
+  | "verificando"
   | "enviando_bluetooth"
   | "esperando_esp32"
   | "conectado"
@@ -18,11 +19,13 @@ export interface SesionAquaControl {
 }
 
 /**
- * Configuración enviada a cada tarjeta ESP32 por Bluetooth.
- * Única identificación de la tarjeta: RED + CLAVE (WiFi) + número de tanque.
+ * Configuración completa enviada a cada tarjeta ESP32.
+ * Identificación: USUARIO + RED + número de tanque.
  */
 export interface ConfiguracionTarjeta {
+  usuario: string;
+  claveApp: string;
   red: string;
-  clave: string;
+  claveWifi: string;
   numeroTanque: number;
 }

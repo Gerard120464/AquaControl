@@ -155,14 +155,14 @@ export default function Dashboard() {
             enUso={tanque.enUso}
             compacto
           />
-        </div>
 
-        <div className="bloqueScroll">
           <GraficasPanel
             tanque={tanque}
             usuario={sesion?.usuario ?? null}
           />
+        </div>
 
+        <div className="bloqueScroll">
           <section className="panelesInferiores">
           <div className="panel">
             <h3>Equipos — {tanque.nombre}</h3>

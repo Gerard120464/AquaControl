@@ -1,13 +1,16 @@
 import { initializeApp, type FirebaseApp } from "firebase/app";
 import { getDatabase, type Database } from "firebase/database";
 
+export const FIREBASE_DATABASE_URL = (
+  import.meta.env.VITE_FIREBASE_DATABASE_URL ??
+  "https://acuario-fa7d7.firebaseio.com"
+).replace(/\/$/, "");
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY ?? "",
   authDomain:
     import.meta.env.VITE_FIREBASE_AUTH_DOMAIN ?? "acuario-fa7d7.firebaseapp.com",
-  databaseURL:
-    import.meta.env.VITE_FIREBASE_DATABASE_URL ??
-    "https://acuario-fa7d7.firebaseio.com",
+  databaseURL: FIREBASE_DATABASE_URL,
   projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID ?? "acuario-fa7d7",
   storageBucket:
     import.meta.env.VITE_FIREBASE_STORAGE_BUCKET ?? "acuario-fa7d7.appspot.com",

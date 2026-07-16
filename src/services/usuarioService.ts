@@ -2,6 +2,15 @@ import { get, ref, update } from "firebase/database";
 import { obtenerDatabase } from "../config/firebase";
 import type { NodoUsuarioFirebase } from "../types/firebaseNodos";
 
+export function leerClaveAppUsuario(
+  datos: NodoUsuarioFirebase | null,
+): string | null {
+  if (!datos) return null;
+  const raw = datos.clave ?? datos.Clave;
+  if (raw == null || raw === "") return null;
+  return String(raw).trim();
+}
+
 export async function leerUsuario(
   usuario: string,
 ): Promise<NodoUsuarioFirebase | null> {
@@ -18,8 +27,9 @@ export async function validarAccesoApp(
   clave: string,
 ): Promise<boolean> {
   const datos = await leerUsuario(usuario);
-  if (!datos?.clave) return false;
-  return String(datos.clave).trim() === clave.trim();
+  const claveFirebase = leerClaveAppUsuario(datos);
+  if (!claveFirebase) return false;
+  return claveFirebase === clave.trim();
 }
 
 /** Obligatorio antes de que la app escriba tanques o nodos en Firebase. */

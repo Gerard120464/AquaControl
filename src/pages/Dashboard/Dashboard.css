@@ -192,13 +192,13 @@ body,
     grid-template-areas:
         "topbar topbar"
         "indicadores indicadores"
-        "tanques graficas"
-        "paneles paneles"
+        "graficas graficas"
+        "tanques paneles"
         "footer footer";
 
-    grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);
+    grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);
 
-    grid-template-rows:auto auto 1fr auto auto;
+    grid-template-rows:auto auto minmax(220px,1fr) auto auto;
 
     min-width:0;
 
@@ -602,8 +602,6 @@ body,
 
     grid-area:paneles;
 
-    grid-column:1 / -1;
-
     display:grid;
 
     grid-template-columns:repeat(3,1fr);
@@ -907,8 +905,8 @@ body,
     grid-template-areas:
       "topbar"
       "indicadores"
-      "tanques"
       "graficas"
+      "tanques"
       "paneles"
       "footer";
     grid-template-columns: 1fr;

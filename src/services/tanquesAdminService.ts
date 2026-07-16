@@ -80,6 +80,24 @@ export async function crearTanquesIniciales(
   return ids;
 }
 
+/** Crea el tanque T-0N si aún no existe (p. ej. al configurar tarjeta nueva). */
+export async function crearTanqueSiFalta(
+  usuario: string,
+  clave: string,
+  numero: number,
+): Promise<string> {
+  const db = obtenerDatabase();
+  if (!db) throw new Error("Firebase no configurado");
+  await asegurarAccesoApp(usuario, clave);
+
+  const id = idTanque(numero);
+  const existente = await leerNodoTanque(usuario, id);
+  if (existente) return id;
+
+  await set(ref(db, `${usuario}/TANQUES/${id}`), plantillaTanque(numero));
+  return id;
+}
+
 /** Agrega un tanque nuevo (Tanque +). Requiere USUARIO + clave válidos. */
 export async function agregarTanque(
   usuario: string,
