@@ -47,10 +47,7 @@ export default function GraficasPanel({ tanque, usuario }: Props) {
   return (
     <div className="panel-graficas">
       <div className="panel-graficas__titulo">
-        <h2>📈 Tendencia — {tanque.nombre}</h2>
-        <p className="panel-graficas__subtitulo">
-          Temperatura y oxígeno (lectura cada 10 min)
-        </p>
+        <h2>Últimas 24 horas — {tanque.nombre}</h2>
         {tieneHistorico && !lecturaEnVivo && (
           <small className="panel-graficas__aviso-prueba">
             Histórico guardado — tarjeta sin señal reciente
