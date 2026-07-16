@@ -144,6 +144,20 @@
   cursor: not-allowed;
 }
 
+.config-pagina__banner-conectado {
+  margin: 0 0 20px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #0f2a1a 0%, #143d24 100%);
+  border: 2px solid #39ff6d;
+  color: #b8ffd0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.02em;
+  box-shadow: 0 0 24px rgba(57, 255, 109, 0.15);
+}
+
 .config-pagina__mensaje {
   margin-top: 16px;
   padding: 12px;
@@ -157,6 +171,13 @@
   background: #3d1f1f;
   border: 1px solid #ff6b6b;
   color: #ffb3b3;
+}
+
+.config-pagina__mensaje--ok {
+  background: #0f1f18;
+  border: 1px solid #39ff6d;
+  color: #9dffb8;
+  font-weight: 600;
 }
 
 .config-pagina__diagrama {

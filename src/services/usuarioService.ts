@@ -22,14 +22,61 @@ export async function leerUsuario(
   return snapshot.val() as NodoUsuarioFirebase;
 }
 
+export function mensajeUsuarioConectado(usuario: string): string {
+  return `USUARIO CONECTADO — ${usuario.trim().toUpperCase()} verificado en Firebase.`;
+}
+
+export type ResultadoValidacionAcceso =
+  | { ok: true; usuario: string; mensaje: string }
+  | { ok: false; error: string };
+
+export async function validarAccesoAppDetalle(
+  usuario: string,
+  clave: string,
+): Promise<ResultadoValidacionAcceso> {
+  const usuarioNorm = usuario.trim().toUpperCase();
+  const claveNorm = clave.trim();
+
+  if (!usuarioNorm || !claveNorm) {
+    return { ok: false, error: "Ingresa USUARIO y clave." };
+  }
+
+  const datos = await leerUsuario(usuarioNorm);
+  if (!datos) {
+    return {
+      ok: false,
+      error: `USUARIO "${usuarioNorm}" no está creado en Firebase.`,
+    };
+  }
+
+  const claveFirebase = leerClaveAppUsuario(datos);
+  if (!claveFirebase) {
+    return {
+      ok: false,
+      error: `USUARIO "${usuarioNorm}" existe pero no tiene clave en /${usuarioNorm}/clave.`,
+    };
+  }
+
+  if (claveFirebase !== claveNorm) {
+    return {
+      ok: false,
+      error: `Clave incorrecta para ${usuarioNorm}. Verifica /${usuarioNorm}/clave en Firebase.`,
+    };
+  }
+
+  return {
+    ok: true,
+    usuario: usuarioNorm,
+    mensaje: mensajeUsuarioConectado(usuarioNorm),
+  };
+}
+
 export async function validarAccesoApp(
   usuario: string,
   clave: string,
 ): Promise<boolean> {
-  const datos = await leerUsuario(usuario);
-  const claveFirebase = leerClaveAppUsuario(datos);
-  if (!claveFirebase) return false;
-  return claveFirebase === clave.trim();
+  const resultado = await validarAccesoAppDetalle(usuario, clave);
+  return resultado.ok;
 }
 
 /** Obligatorio antes de que la app escriba tanques o nodos en Firebase. */

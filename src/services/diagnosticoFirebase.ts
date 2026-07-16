@@ -32,6 +32,7 @@ export function etiquetaEstadoDiagnostico(estado?: string): string {
     case "online":
     case "firebase_ok":
     case "wifi_ok":
+    case "usuario_ok":
       return "OK";
     case "error_auth":
       return "Error Auth";
@@ -47,7 +48,7 @@ export function etiquetaEstadoDiagnostico(estado?: string): string {
 }
 
 export function claseEstadoDiagnostico(estado?: string): "ok" | "alerta" | "info" {
-  if (estado === "online" || estado === "firebase_ok") return "ok";
+  if (estado === "online" || estado === "firebase_ok" || estado === "usuario_ok") return "ok";
   if (estado?.startsWith("error_")) return "alerta";
   return "info";
 }

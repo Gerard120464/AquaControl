@@ -1,4 +1,4 @@
-import { validarAccesoApp } from "./usuarioService";
+import { validarAccesoAppDetalle } from "./usuarioService";
 import {
   crearTanqueSiFalta,
   idTanque,
@@ -6,7 +6,7 @@ import {
 } from "./tanquesAdminService";
 
 export type ResultadoValidacionTarjeta =
-  | { ok: true; tanqueId: string }
+  | { ok: true; tanqueId: string; mensaje: string }
   | { ok: false; error: string };
 
 /** Verifica USUARIO + clave de app en Firebase. */
@@ -21,15 +21,12 @@ export async function verificarAccesoTarjeta(
     return { ok: false, error: "Ingresa USUARIO y clave." };
   }
 
-  const accesoOk = await validarAccesoApp(usuarioNorm, clave);
-  if (!accesoOk) {
-    return {
-      ok: false,
-      error: `USUARIO o clave no válidos (/${usuarioNorm}/clave en Firebase).`,
-    };
+  const acceso = await validarAccesoAppDetalle(usuarioNorm, clave);
+  if (!acceso.ok) {
+    return { ok: false, error: acceso.error };
   }
 
-  return { ok: true, tanqueId: "" };
+  return { ok: true, tanqueId: "", mensaje: acceso.mensaje };
 }
 
 /** Verifica acceso y asegura que el tanque exista; si no, lo crea. */
@@ -49,7 +46,7 @@ export async function asegurarTanqueParaTarjeta(
     if (!existente) {
       await crearTanqueSiFalta(usuarioNorm, claveApp.trim(), numeroTanque);
     }
-    return { ok: true, tanqueId };
+    return { ok: true, tanqueId, mensaje: acceso.mensaje };
   } catch (e) {
     return {
       ok: false,

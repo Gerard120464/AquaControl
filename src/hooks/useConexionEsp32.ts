@@ -46,7 +46,7 @@ export function useConexionEsp32() {
 
     const ids = await listarIdsTanques(u);
     setTanquesDisponibles(ids);
-    return { ok: true as const, ids };
+    return { ok: true as const, ids, mensaje: verif.mensaje };
   }, []);
 
   const verificarUsuarioClave = useCallback(async () => {
@@ -70,8 +70,8 @@ export function useConexionEsp32() {
     setEstado("inicial");
     setMensaje(
       resultado.ids.length > 0
-        ? "Acceso OK. Selecciona un tanque o agrega uno nuevo."
-        : "Acceso OK. Agrega un tanque para esta tarjeta.",
+        ? `${resultado.mensaje} Selecciona un tanque o agrega uno nuevo.`
+        : `${resultado.mensaje} Agrega un tanque para esta tarjeta.`,
     );
 
     if (resultado.ids.length > 0) {

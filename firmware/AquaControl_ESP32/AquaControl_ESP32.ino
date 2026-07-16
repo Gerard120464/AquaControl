@@ -499,7 +499,8 @@ bool validarClaveAppHttp(const String &usuario, const String &claveApp) {
     Serial.println("]");
 
     if (claveFb == claveApp) {
-      Serial.println("Clave app OK");
+      Serial.print("USUARIO CONECTADO: ");
+      Serial.println(usuario);
       return true;
     }
 
@@ -507,7 +508,7 @@ bool validarClaveAppHttp(const String &usuario, const String &claveApp) {
     return false;
   }
 
-  Serial.println("Usuario no encontrado en Firebase");
+  Serial.println("USUARIO no encontrado en Firebase");
   return false;
 }
 
@@ -615,8 +616,8 @@ bool completarArranque() {
     if (!validarClaveAppHttp(usuarioFirebase, claveAppPendiente)) {
       publicarDiagnostico(
         "error_usuario",
-        "Clave incorrecta para " + usuarioFirebase +
-          ". Usa la de Firebase (clave o Clave). Ej FINCA1: 3191");
+        "Clave incorrecta o USUARIO no creado: " + usuarioFirebase +
+          ". Verifica /" + usuarioFirebase + "/clave en Firebase.");
       requiereValidarClaveApp = false;
       claveAppPendiente = "";
       iniciarPortalConfiguracion();
@@ -624,7 +625,9 @@ bool completarArranque() {
     }
     requiereValidarClaveApp = false;
     claveAppPendiente = "";
-    publicarDiagnostico("usuario_ok", "Usuario " + usuarioFirebase + " verificado.");
+    publicarDiagnostico(
+      "usuario_ok",
+      "USUARIO CONECTADO — " + usuarioFirebase + " verificado en Firebase.");
   }
 
   detenerPortalConfiguracion();

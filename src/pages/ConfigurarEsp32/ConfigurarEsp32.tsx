@@ -29,7 +29,6 @@ export default function ConfigurarEsp32() {
     setRed,
     claveWifi,
     setClaveWifi,
-    estado,
     mensaje,
     cargando,
     verificarUsuarioClave,
@@ -129,6 +128,11 @@ export default function ConfigurarEsp32() {
             </button>
           )}
         </div>
+        {accesoVerificado && (
+          <p className="config-pagina__mensaje config-pagina__mensaje--ok">
+            USUARIO CONECTADO — {usuarioDiag}
+          </p>
+        )}
       </section>
 
       {/* PASO 2 */}
@@ -279,8 +283,15 @@ export default function ConfigurarEsp32() {
           <p style={{ color: "#b9c7de" }}>Sin mensajes de la tarjeta aún.</p>
         )}
         {mensaje && (
-          <p style={{ marginTop: 12 }}>
-            <b>{estado}</b> — {mensaje}
+          <p
+            className={`config-pagina__diagnostico-msg${
+              mensaje.startsWith("USUARIO CONECTADO")
+                ? " config-pagina__mensaje--ok"
+                : ""
+            }`}
+            style={{ marginTop: 12 }}
+          >
+            {mensaje}
           </p>
         )}
       </section>

@@ -8,7 +8,7 @@ import {
 import {
   cambiarClaveApp,
   contarTanques,
-  validarAccesoApp,
+  validarAccesoAppDetalle,
 } from "../services/usuarioService";
 import { useSesion } from "./useSesion";
 
@@ -35,25 +35,23 @@ export function useConfiguracion() {
     setCargando(true);
     setMensaje("");
     try {
-      const ok = await validarAccesoApp(
+      const resultado = await validarAccesoAppDetalle(
         usuarioInput.trim().toUpperCase(),
         claveInput,
       );
-      if (!ok) {
-        setMensaje(
-          "USUARIO o clave incorrectos. Verifica GERARD/clave en Firebase.",
-        );
+      if (!resultado.ok) {
+        setMensaje(resultado.error);
         return false;
       }
 
-      const usuario = usuarioInput.trim().toUpperCase();
+      const usuario = resultado.usuario;
       guardarSesion({ usuario, clave: claveInput });
       await refrescarTanques(usuario);
       const total = await contarTanques(usuario);
       setMensaje(
         total > 0
-          ? `Sesión iniciada. ${total} tanque(s) en Firebase.`
-          : "Sesión iniciada. Define el número de tanques para crear la estructura.",
+          ? `${resultado.mensaje} ${total} tanque(s) en Firebase.`
+          : `${resultado.mensaje} Define el número de tanques para crear la estructura.`,
       );
       return true;
     } catch (error) {

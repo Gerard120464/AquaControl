@@ -50,6 +50,16 @@ export default function Configuracion() {
         </p>
       </header>
 
+      {sesion && (
+        <div
+          className="config-pagina__banner-conectado"
+          role="status"
+          aria-live="polite"
+        >
+          ✓ USUARIO CONECTADO — {sesion.usuario} verificado en Firebase
+        </div>
+      )}
+
       <section className="config-pagina__paso">
         <h2>1. Acceso (USUARIO + clave de app)</h2>
         <p>
@@ -85,7 +95,7 @@ export default function Configuracion() {
               disabled={cargando}
               onClick={iniciarSesion}
             >
-              {cargando ? "Conectando…" : "Iniciar sesión"}
+              {cargando ? "Verificando…" : "Verificar USUARIO y clave"}
             </button>
           ) : (
             <button
@@ -97,8 +107,20 @@ export default function Configuracion() {
             </button>
           )}
         </div>
+        {sesion && (
+          <p className="config-pagina__mensaje config-pagina__mensaje--ok">
+            Sesión activa para <b>{sesion.usuario}</b>. Puedes crear tanques o
+            cerrar sesión.
+          </p>
+        )}
         {mensaje && !sesion && (
-          <p className="config-pagina__mensaje config-pagina__mensaje--alerta">
+          <p
+            className={`config-pagina__mensaje${
+              mensaje.startsWith("USUARIO CONECTADO")
+                ? " config-pagina__mensaje--ok"
+                : " config-pagina__mensaje--alerta"
+            }`}
+          >
             {mensaje}
           </p>
         )}
@@ -224,7 +246,17 @@ export default function Configuracion() {
         </section>
       )}
 
-      {mensaje && <p className="config-pagina__mensaje">{mensaje}</p>}
+      {mensaje && (
+        <p
+          className={`config-pagina__mensaje${
+            mensaje.startsWith("USUARIO CONECTADO")
+              ? " config-pagina__mensaje--ok"
+              : ""
+          }`}
+        >
+          {mensaje}
+        </p>
+      )}
 
       <section className="config-pagina__paso config-pagina__aviso config-pagina__aviso--info">
         <h2>📱 iPhone — app vieja o tanques incorrectos</h2>
