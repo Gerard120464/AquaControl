@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useConfiguracion } from "../../hooks/useConfiguracion";
+import { APP_VERSION } from "../../constants/appVersion";
+import { forzarActualizacionApp } from "../../utils/verificarVersionApp";
 import "./Configuracion.css";
 
 export default function Configuracion() {
@@ -223,6 +225,33 @@ export default function Configuracion() {
       )}
 
       {mensaje && <p className="config-pagina__mensaje">{mensaje}</p>}
+
+      <section className="config-pagina__paso config-pagina__aviso config-pagina__aviso--info">
+        <h2>📱 iPhone — app vieja o tanques incorrectos</h2>
+        <p style={{ margin: "0 0 12px", color: "#b9c7de", lineHeight: 1.55 }}>
+          Si ves <b>4 tanques</b> y trabajas con <b>FINCA1</b>, casi seguro es
+          caché de Safari o sesión de <b>GERARD</b>. FINCA1 solo tiene los tanques
+          que creaste (ej. T-01).
+        </p>
+        <ol style={{ margin: "0 0 12px", paddingLeft: 20, color: "#b9c7de" }}>
+          <li>Cierra sesión arriba si no dice FINCA1.</li>
+          <li>Inicia sesión: FINCA1 + clave 3191.</li>
+          <li>
+            Si sigue igual: borra el icono de inicio, en Safari Ajustes →
+            Avanzado → Datos de sitios web → busca github.io → Eliminar.
+          </li>
+        </ol>
+        <p style={{ margin: "0 0 12px", color: "#9eb0cc", fontSize: "0.9rem" }}>
+          Versión instalada: <b>v{APP_VERSION}</b> (pie del dashboard)
+        </p>
+        <button
+          type="button"
+          className="config-pagina__btn primario"
+          onClick={forzarActualizacionApp}
+        >
+          Forzar actualización de la app
+        </button>
+      </section>
 
       <section className="config-pagina__diagrama">
         <pre>{`ADMIN Firebase                 APP                              TARJETA ESP32

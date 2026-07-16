@@ -7,6 +7,7 @@ import TankView from "../../components/TankView/TankView";
 import { useEstadoEsp32 } from "../../hooks/useEstadoEsp32";
 import { useTanques } from "../../hooks/useTanques";
 import { claseEquipo, etiquetaEquipo } from "../../utils/estadoEquipo";
+import { APP_VERSION } from "../../constants/appVersion";
 
 export default function Dashboard() {
   const { tanques, cargando, sesion } = useTanques();
@@ -257,7 +258,7 @@ export default function Dashboard() {
           <div>
             Última actualización : {new Date().toLocaleTimeString()}
           </div>
-          <div className="footer-version">App v2.1 · Firebase · 16-jul-2026</div>
+          <div className="footer-version">App v{APP_VERSION} · Firebase</div>
         </footer>
         </div>
       </main>
