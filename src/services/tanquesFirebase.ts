@@ -15,12 +15,16 @@ import {
 } from "../utils/conexionTarjeta";
 
 const sensoresVacios: Sensores = {
-  temperatura: 0,
   oxigeno: 0,
-  ph: 0,
   tds: 0,
-  ec: 0,
-  nh4: 0,
+  ph: 0,
+  temperatura: 0,
+  temperaturaExterna: 0,
+  flujo: 0,
+  humedad: 0,
+  nitritos: 0,
+  nitratos: 0,
+  amoniaco: 0,
 };
 
 const equiposVacios: EquiposTanque = {
@@ -54,12 +58,19 @@ function boolEnUso(valor: unknown): boolean {
 
 function mapearTanque(id: string, nodo: NodoTanqueFirebase, ahora: number): Tanque {
   const sensores: Sensores = {
-    temperatura: numero(nodo.temperatura, sensoresVacios.temperatura),
     oxigeno: numero(nodo.oxigeno, sensoresVacios.oxigeno),
-    ph: numero(nodo.ph, sensoresVacios.ph),
     tds: numero(nodo.tds, sensoresVacios.tds),
-    ec: numero(nodo.ec, sensoresVacios.ec),
-    nh4: numero(nodo.nh4, sensoresVacios.nh4),
+    ph: numero(nodo.ph, sensoresVacios.ph),
+    temperatura: numero(nodo.temperatura, sensoresVacios.temperatura),
+    temperaturaExterna: numero(
+      nodo.temperaturaExterna,
+      sensoresVacios.temperaturaExterna,
+    ),
+    flujo: numero(nodo.flujo, sensoresVacios.flujo),
+    humedad: numero(nodo.humedad, sensoresVacios.humedad),
+    nitritos: numero(nodo.nitritos, sensoresVacios.nitritos),
+    nitratos: numero(nodo.nitratos, sensoresVacios.nitratos),
+    amoniaco: numero(nodo.amoniaco ?? nodo.nh4, sensoresVacios.amoniaco),
   };
 
   const enUso = boolEnUso(nodo.enUso);

@@ -1,30 +1,31 @@
-import type { Sensores } from "../../types/tanque";
+import { VARIABLES_ESP32 } from "../../constants/variablesTanque";
+import type { SensoresEsp32 } from "../../types/tanque";
 
 type Props = {
-  sensores: Sensores;
+  sensores: SensoresEsp32;
   compacto?: boolean;
   enUso?: boolean;
 };
 
-const items = [
-  { key: "temperatura" as const, icono: "🌡", label: "Temp", unidad: "°C" },
-  { key: "oxigeno" as const, icono: "💨", label: "O₂", unidad: "mg/L" },
-  { key: "ph" as const, icono: "🧪", label: "pH", unidad: "" },
-  { key: "tds" as const, icono: "💧", label: "TDS", unidad: "" },
-  { key: "ec" as const, icono: "⚡", label: "EC", unidad: "" },
-  { key: "nh4" as const, icono: "🧪", label: "NH₄", unidad: "" },
-];
-
-export default function IndicadoresSensores({ sensores, compacto = false, enUso = true }: Props) {
+export default function IndicadoresSensores({
+  sensores,
+  compacto = false,
+  enUso = true,
+}: Props) {
   return (
-    <section className={`indicadores ${compacto ? "indicadores--compacto" : ""}`}>
-      {items.map((item) => (
+    <section
+      className={`indicadores ${compacto ? "indicadores--compacto" : ""}`}
+      aria-label="Sensores ESP32"
+    >
+      {VARIABLES_ESP32.map((item) => (
         <div className="cardIndicador" key={item.key}>
           <span>
             {item.icono} {item.label}
           </span>
           <h2>
-            {!enUso ? "—" : (
+            {!enUso ? (
+              "—"
+            ) : (
               <>
                 {sensores[item.key]}
                 {item.unidad && ` ${item.unidad}`}

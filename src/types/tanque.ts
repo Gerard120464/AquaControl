@@ -2,14 +2,25 @@ export type EstadoTanque = "normal" | "alarma";
 
 export type EstadoEquipo = "encendido" | "apagado" | "espera" | "activa";
 
-export interface Sensores {
-  temperatura: number;
+/** Lecturas automáticas desde la tarjeta ESP32. */
+export interface SensoresEsp32 {
   oxigeno: number;
-  ph: number;
   tds: number;
-  ec: number;
-  nh4: number;
+  ph: number;
+  temperatura: number;
+  temperaturaExterna: number;
+  flujo: number;
+  humedad: number;
 }
+
+/** Valores de calidad del agua ingresados por el usuario. */
+export interface VariablesUsuario {
+  nitritos: number;
+  nitratos: number;
+  amoniaco: number;
+}
+
+export interface Sensores extends SensoresEsp32, VariablesUsuario {}
 
 export interface EquiposTanque {
   recirculador: EstadoEquipo;

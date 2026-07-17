@@ -9,7 +9,10 @@
  *   TANQUES/
  *     T-01/
  *       nombre, enUso, estado, conectado, ultimoHeartbeat
- *       temperatura, oxigeno, ph, tds, ec, nh4
+ *       ── ESP32 (automático) ──
+ *       oxigeno, tds, ph, temperatura, temperaturaExterna, flujo, humedad
+ *       ── Usuario (manual) ──
+ *       nitritos, nitratos, amoniaco
  *       registro/  ← ficha de la tarjeta al vincularse (red, MAC…)
  *       historico/  ← tendencia temp/O2 cada 10 min (clave YYYYMMDDHHmm)
  */
@@ -41,10 +44,19 @@ export interface NodoTanqueFirebase {
     temperatura?: Record<string, number>;
     oxigeno?: Record<string, number>;
   };
-  temperatura?: number;
+  /** ESP32 */
   oxigeno?: number;
-  ph?: number;
   tds?: number;
+  ph?: number;
+  temperatura?: number;
+  temperaturaExterna?: number;
+  flujo?: number;
+  humedad?: number;
+  /** Usuario */
+  nitritos?: number;
+  nitratos?: number;
+  amoniaco?: number;
+  /** Compatibilidad con nodos antiguos */
   ec?: number;
   nh4?: number;
   enUso?: boolean | string;

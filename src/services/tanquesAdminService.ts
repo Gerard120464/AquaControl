@@ -21,12 +21,16 @@ export function plantillaTanque(numero: number): NodoTanqueFirebase {
     enUso: true,
     estado: "normal",
     conectado: "0",
-    temperatura: 0,
     oxigeno: 0,
-    ph: 7,
     tds: 0,
-    ec: 0,
-    nh4: 0,
+    ph: 7,
+    temperatura: 0,
+    temperaturaExterna: 0,
+    flujo: 0,
+    humedad: 0,
+    nitritos: 0,
+    nitratos: 0,
+    amoniaco: 0,
   };
 }
 
@@ -129,12 +133,13 @@ export function esTanqueVacio(nodo: NodoTanqueFirebase): boolean {
   const base = plantillaTanque(numero > 0 ? numero : 1);
 
   const campos: (keyof NodoTanqueFirebase)[] = [
-    "temperatura",
     "oxigeno",
-    "ph",
     "tds",
-    "ec",
-    "nh4",
+    "ph",
+    "temperatura",
+    "temperaturaExterna",
+    "flujo",
+    "humedad",
   ];
 
   for (const campo of campos) {
@@ -145,6 +150,53 @@ export function esTanqueVacio(nodo: NodoTanqueFirebase): boolean {
   }
 
   return true;
+}
+
+/** Agrega variables faltantes en tanques ya creados (migración). */
+export async function completarVariablesTanquesExistentes(
+  usuario: string,
+  clave: string,
+): Promise<void> {
+  const db = obtenerDatabase();
+  if (!db) return;
+
+  await asegurarAccesoApp(usuario, clave);
+
+  const ids = await listarIdsTanques(usuario);
+  const clavesVariables: (keyof NodoTanqueFirebase)[] = [
+    "oxigeno",
+    "tds",
+    "ph",
+    "temperatura",
+    "temperaturaExterna",
+    "flujo",
+    "humedad",
+    "nitritos",
+    "nitratos",
+    "amoniaco",
+  ];
+
+  for (const id of ids) {
+    const nodo = await leerNodoTanque(usuario, id);
+    if (!nodo) continue;
+
+    const numero = nodo.numero ?? numeroDesdeIdTanque(id);
+    const plantilla = plantillaTanque(numero > 0 ? numero : 1);
+    const patch: Record<string, number> = {};
+
+    for (const campo of clavesVariables) {
+      if (nodo[campo] === undefined || nodo[campo] === null) {
+        const valor = plantilla[campo];
+        if (typeof valor === "number") {
+          patch[campo] = valor;
+        }
+      }
+    }
+
+    if (Object.keys(patch).length > 0) {
+      await update(ref(db, `${usuario}/TANQUES/${id}`), patch);
+    }
+  }
 }
 
 export async function leerNodoTanque(

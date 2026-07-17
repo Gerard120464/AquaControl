@@ -908,7 +908,7 @@ bool vincularTarjetaANodo() {
 
 // ==================== SENSORES (placeholder) ====================
 float leerTemperatura() {
-  // TODO: reemplazar con sensor real (DS18B20, DHT, etc.)
+  // TODO: reemplazar con sensor real (DS18B20, etc.)
   return 20.0 + (numeroTanque * 0.5);
 }
 
@@ -920,24 +920,53 @@ float leerPh() {
   return 7.0;
 }
 
+float leerTds() {
+  // TODO: sensor TDS
+  return 450.0;
+}
+
+float leerTemperaturaExterna() {
+  // TODO: sensor ambiente (DHT, etc.)
+  return 26.0;
+}
+
+float leerFlujo() {
+  // TODO: caudalímetro
+  return 12.5;
+}
+
+float leerHumedad() {
+  // TODO: sensor humedad
+  return 68.0;
+}
+
 void publicarHistorico() {
   if (!Firebase.ready()) return;
 
   float temp = leerTemperatura();
   float o2 = leerOxigeno();
   float ph = leerPh();
+  float tds = leerTds();
+  float tempExt = leerTemperaturaExterna();
+  float flujo = leerFlujo();
+  float humedad = leerHumedad();
 
   // Un solo punto cada 10 min (misma clave sobrescribe si coincide el intervalo)
   guardarHistoricoSensor("temperatura", temp);
   guardarHistoricoSensor("oxigeno", o2);
 
-  // Valor actual del dashboard (misma lectura, no cada 5 s)
+  // Valores actuales — la ESP32 alimenta Firebase
   escribirFirebaseFloat(rutaTanqueBase + "/temperatura", temp);
   escribirFirebaseFloat(rutaTanqueBase + "/oxigeno", o2);
   escribirFirebaseFloat(rutaTanqueBase + "/ph", ph);
+  escribirFirebaseFloat(rutaTanqueBase + "/tds", tds);
+  escribirFirebaseFloat(rutaTanqueBase + "/temperaturaExterna", tempExt);
+  escribirFirebaseFloat(rutaTanqueBase + "/flujo", flujo);
+  escribirFirebaseFloat(rutaTanqueBase + "/humedad", humedad);
 
-  Serial.printf("Lectura 10 min → T=%.1f O2=%.1f pH=%.1f clave %s\n",
-                temp, o2, ph, claveIntervalo10Min().c_str());
+  Serial.printf(
+    "Lectura 10 min → T=%.1f O2=%.1f pH=%.1f TDS=%.0f Text=%.1f Flujo=%.1f Hum=%.0f clave %s\n",
+    temp, o2, ph, tds, tempExt, flujo, humedad, claveIntervalo10Min().c_str());
 }
 
 void monitorearWiFi() {

@@ -1,6 +1,7 @@
 import "./Dashboard.css";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import CalidadAguaForm from "../../components/CalidadAguaForm/CalidadAguaForm";
 import GraficasPanel from "../../components/GraficasPanel/GraficasPanel";
 import IndicadoresSensores from "../../components/IndicadoresSensores/IndicadoresSensores";
 import TankView from "../../components/TankView/TankView";
@@ -163,6 +164,21 @@ export default function Dashboard() {
             tanque={tanque}
             usuario={sesion?.usuario ?? null}
           />
+
+          {sesion && (
+            <CalidadAguaForm
+              usuario={sesion.usuario}
+              clave={sesion.clave}
+              tanqueId={tanque.id}
+              tanqueNombre={tanque.nombre}
+              valores={{
+                nitritos: tanque.sensores.nitritos,
+                nitratos: tanque.sensores.nitratos,
+                amoniaco: tanque.sensores.amoniaco,
+              }}
+              enUso={tanque.enUso}
+            />
+          )}
 
           <section className="panelesInferiores">
           <div className="panel">

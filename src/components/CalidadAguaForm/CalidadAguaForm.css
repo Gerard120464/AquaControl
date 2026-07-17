@@ -1,0 +1,80 @@
+.calidad-agua {
+  margin-top: 16px;
+  padding: 18px;
+  border-radius: 12px;
+  background: #111a2b;
+  border: 1px solid #2a3f5f;
+}
+
+.calidad-agua__header h3 {
+  margin: 0 0 6px;
+  font-size: 1rem;
+  color: #e8eef8;
+}
+
+.calidad-agua__header p {
+  margin: 0 0 14px;
+  color: #9eb0cc;
+  font-size: 0.88rem;
+}
+
+.calidad-agua__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.calidad-agua__campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #b9c7de;
+  font-size: 0.88rem;
+}
+
+.calidad-agua__campo input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #2a3f5f;
+  background: #0b1220;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.calidad-agua__campo input:focus {
+  outline: none;
+  border-color: #2563eb;
+}
+
+.calidad-agua__acciones {
+  margin-top: 14px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+}
+
+.calidad-agua__btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.calidad-agua__btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.calidad-agua__mensaje {
+  margin: 0;
+  color: #ffb3b3;
+  font-size: 0.9rem;
+}
+
+.calidad-agua__mensaje--ok {
+  color: #9dffb8;
+}
