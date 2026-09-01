@@ -1,0 +1,17 @@
+Coloca aquí los PDF de «Calidad del Agua».
+
+Nombres esperados (coinciden con el menú de la app):
+
+  calidad-agua.pdf
+  introduccion.pdf
+  nitritos.pdf
+  nitratos.pdf
+  amoniaco.pdf
+  ph.pdf
+  orp.pdf
+  oxigeno.pdf
+  dst.pdf
+  rangos-optimos.pdf
+
+Cuando entregues los archivos, cópialos en esta carpeta con esos nombres
+(o dime los nombres reales y ajustamos el menú).
